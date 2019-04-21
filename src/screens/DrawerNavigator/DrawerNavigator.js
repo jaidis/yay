@@ -59,7 +59,7 @@ class DrawerNavigator extends Component {
             <Image
             square
             style={{ width: 80, height: 80 }}
-            source={require("../../../assets/img/yay.jpg")}
+            source={require("../../../assets/img/yay-transparente.png")}
           />
             <Text
               style={

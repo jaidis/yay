@@ -48,9 +48,9 @@ export function menuLogo(clasePadre) {
         </Left>
         <Body style={{ flex: 1, alignItems: "center" }}>
           <ResponsiveImage
-            source={require("../../assets/img/yay.jpg")}
+            source={require("../../assets/img/yay-transparente.png")}
             initWidth={SCREEN_WIDTH * 0.2}
-            initHeight={SCREEN_HEIGHT * 0.05}
+            initHeight={SCREEN_HEIGHT * 0.1}
           />
         </Body>
         <Right style={{ flex: 1 }} />

@@ -15,3 +15,4 @@ La aplicación esta compuesta por los siguientes elementos:
 - React Native Elements 1.1.0
 - React Native Vector Icons 6.4.2
 - React Native Responsive Image 2.3.1
+- React Native Easy Grid 0.2.1

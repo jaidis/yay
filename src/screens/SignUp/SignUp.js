@@ -117,7 +117,7 @@ class SignUp extends Component {
   };
 
   signUp = () => {
-    this.props.navigation.navigate("TabFirst");
+    this.props.navigation.navigate("Home");
   };
 
   render() {

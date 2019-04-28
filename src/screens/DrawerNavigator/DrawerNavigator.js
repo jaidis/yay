@@ -31,6 +31,7 @@ import {
 import DrawerNavigatorStyles from "./DrawerNavigatorStyles";
 
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
+import Home from '../Home/Home'
 import TabFirst from "../TabFirst/TabFirst";
 import TabSecond from "../TabSecond/TabSecond";
 
@@ -118,6 +119,7 @@ export default connect(mapStateToProps)(DrawerNavigator);
 
 export const AppDrawerNavigator = createDrawerNavigator(
   {
+    Home: Home,
     TabFirst: TabFirst,
     TabSecond: TabSecond
   },

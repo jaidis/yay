@@ -67,7 +67,7 @@ class SignIn extends Component {
   };
 
   signIn = () => {
-    this.props.navigation.navigate("TabFirst");
+    this.props.navigation.navigate("Home");
   };
 
   render() {

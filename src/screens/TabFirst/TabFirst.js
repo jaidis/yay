@@ -4,6 +4,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { addText } from "../../store/actions/index";
 import { connect } from "react-redux";
 
+import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+
 const extension = Platform.select({
   ios: "ios-cloud-upload",
   android: "md-cloud-upload"
@@ -60,36 +62,39 @@ class TabFirst extends Component {
 
   render() {
     return (
-      <View style={styles.buttonStyle}>
-        <TextInput
-          placeholder="JSON Key"
-          value={this.state.key}
-          onChangeText={this.keyChangedHandler}
-        />
-        <TextInput
-          placeholder="JSON Value"
-          value={this.state.value}
-          onChangeText={this.valueChangedHandler}
-        />
-        <Icon.Button name={extension} onPress={this.f_addKey}>
-          Added values to JSON
-        </Icon.Button>
-        <Icon.Button
-          name={extension2}
-          onPress={this.f_deleteKey}
-          backgroundColor="red"
-        >
-          Delete key to JSON
-        </Icon.Button>
+      <View>
+      {NaviteBaseMenu.menuGoBack(this, "TabFirst")}
+        <View style={styles.buttonStyle}>
+          <TextInput
+            placeholder="JSON Key"
+            value={this.state.key}
+            onChangeText={this.keyChangedHandler}
+          />
+          <TextInput
+            placeholder="JSON Value"
+            value={this.state.value}
+            onChangeText={this.valueChangedHandler}
+          />
+          <Icon.Button name={extension} onPress={this.f_addKey}>
+            Added values to JSON
+          </Icon.Button>
+          <Icon.Button
+            name={extension2}
+            onPress={this.f_deleteKey}
+            backgroundColor="red"
+          >
+            Delete key to JSON
+          </Icon.Button>
 
-        <Icon.Button
-          name="md-fastforward"
-          onPress={() => this.props.navigation.navigate("TabSecond")}
-          backgroundColor="green"
-        >
-          Go to TabSecond
-        </Icon.Button>
-        <Text style={styles.textJson}>{this.props.appJson}</Text>
+          <Icon.Button
+            name="md-fastforward"
+            onPress={() => this.props.navigation.navigate("TabSecond")}
+            backgroundColor="green"
+          >
+            Go to TabSecond
+          </Icon.Button>
+          <Text style={styles.textJson}>{this.props.appJson}</Text>
+        </View>
       </View>
     );
   }

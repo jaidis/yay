@@ -8,11 +8,11 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 
-import TabFirst from './src/screens/TabFirst/TabFirst';
-import TabSecond from './src/screens/TabSecond/TabSecond';
 import SignIn from './src/screens/SignIn/SignIn';
+import SignUp from './src/screens/SignUp/SignUp';
+import {AppDrawerNavigator} from './src/screens/DrawerNavigator/DrawerNavigator';
 
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import { createAppContainer, createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { createStore, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
 
@@ -22,11 +22,29 @@ import configureStore from './src/store/configureStore';
 // Init the Store configuration
 const store = configureStore();
 
+const AuthStackNavigator = createStackNavigator(
+  {
+    SignIn: SignIn,
+    SignUp: SignUp
+  },
+  {
+    initialRouteName: "SignIn",
+    defaultNavigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: "rgba(46, 50, 72, 1)",
+      },
+    },
+  }
+);
+
 // Create our stack navigator
-let RootStack = createStackNavigator({
-  TabFirst: TabFirst,
-  TabSecond: TabSecond,
-  SignIn: SignIn
+let RootStack = createSwitchNavigator({
+  AuthStack: AuthStackNavigator,
+  AppDrawer: AppDrawerNavigator
+},
+{
+  initialRouteName: "AuthStack"
 });
 
 // And the app container

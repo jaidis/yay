@@ -11,12 +11,11 @@ import {
   Text,
   Right,
   Body,
-  Icon,
   H2,
   H3
 } from "native-base";
 
-// import { Image } from "react-native-elements";
+import { Icon } from "react-native-elements";
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
@@ -31,7 +30,8 @@ class DetailView extends Component {
 
   state = {
     restaurant: false,
-    isFocused: false
+    isFocused: false,
+    favorito: false
   };
 
   async checkData() {
@@ -51,7 +51,7 @@ class DetailView extends Component {
       if (this.state.restaurant.data.soups.length > 0) {
         this.setState({ sopas: true });
       }
-      
+
       if (this.state.restaurant.data.meats.length > 0) {
         this.setState({ carnes: true });
       }
@@ -62,6 +62,25 @@ class DetailView extends Component {
 
       if (this.state.restaurant.data.specialties.length > 0) {
         this.setState({ especiales: true });
+      }
+
+      if (this.state.restaurant.data.description) {
+        this.setState({ descripcion: true });
+      }
+
+      if (
+        this.state.restaurant.data.map != undefined &&
+        this.state.restaurant.data.map != false
+      ) {
+        this.setState({ mapa: true });
+      }
+
+      if (this.state.restaurant.data.transport_nearby) {
+        this.setState({ transporte_cercano: true });
+      }
+
+      if (this.state.restaurant.data.schedule.length > 0) {
+        this.setState({ horario: true });
       }
     }
   }
@@ -99,7 +118,13 @@ class DetailView extends Component {
           sopas: false,
           carnes: false,
           pescados: false,
-          especiales: false
+          especiales: false,
+          descripcion: false,
+          mapa: false,
+          transporte_cercano: false,
+          horario: false,
+          capacidad: false,
+          favorito: false
         });
         console.log("me voy", this.props.navigation.getParam("data", false));
       })
@@ -118,12 +143,29 @@ class DetailView extends Component {
 
   renderImagen = () => {
     return (
-      <Image
-        source={{
-          uri: this.state.restaurant ? this.state.restaurant.data.logo : ""
-        }}
-        style={{ flex: 1, height: 200, width: null }}
-      />
+      <CardItem cardBody>
+        <Image
+          source={{
+            uri: this.state.restaurant ? this.state.restaurant.data.logo : ""
+          }}
+          style={{ flex: 1, height: 200, width: null }}
+        />
+
+        <Icon
+          reverse
+          name={this.state.favorito ? "star" : "star-o"}
+          type="font-awesome"
+          color="#6E78AA"
+          onPress={() => this.setState(state => ({ favorito: !state.favorito }))}
+          containerStyle={{
+            position: "absolute",
+            alignItems: "center",
+            justifyContent: "center",
+            right: 5,
+            bottom: -25
+          }}
+        />
+      </CardItem>
     );
   };
 
@@ -311,6 +353,107 @@ class DetailView extends Component {
     );
   };
 
+  renderDescripcion = () => {
+    return (
+      <View>
+        <CardItem
+          cardBody
+          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
+        >
+          <H3>En pocas palabras</H3>
+        </CardItem>
+        <Grid>
+          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Text>{this.state.restaurant.data.description}</Text>
+          </Row>
+        </Grid>
+      </View>
+    );
+  };
+
+  renderMapa = () => {
+    return (
+      <View>
+        <CardItem
+          cardBody
+          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
+        >
+          <H3>Geolocalización</H3>
+        </CardItem>
+
+        <Grid>
+          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Text>
+              X: {this.state.restaurant.data.map.coordenateX} Y:{" "}
+              {this.state.restaurant.data.map.coordenateY}
+            </Text>
+          </Row>
+        </Grid>
+      </View>
+    );
+  };
+
+  renderTransporte = () => {
+    return (
+      <View>
+        <CardItem
+          cardBody
+          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
+        >
+          <H3>Transporte Cercano</H3>
+        </CardItem>
+        <Grid>
+          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Text> {this.state.restaurant.data.transport_nearby}</Text>
+          </Row>
+        </Grid>
+      </View>
+    );
+  };
+
+  renderHorario = () => {
+    return (
+      <View>
+        <CardItem
+          cardBody
+          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
+        >
+          <H3>Horario</H3>
+        </CardItem>
+        <Grid>
+          {this.state.restaurant.data.schedule.map((item, index) => {
+            return (
+              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+                <Text>
+                  {item.key} {item.value}
+                </Text>
+              </Row>
+            );
+          })}
+        </Grid>
+      </View>
+    );
+  };
+
+  renderCapacidad = () => {
+    return (
+      <View>
+        <CardItem
+          cardBody
+          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
+        >
+          <H3>Aforo máximo</H3>
+        </CardItem>
+
+        <Grid>
+          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Text>{this.state.restaurant.data.maximum_capacity}</Text>
+          </Row>
+        </Grid>
+      </View>
+    );
+  };
+
   render() {
     eltenedor = {
       emai: "eltenedor@mailna.co",
@@ -330,10 +473,8 @@ class DetailView extends Component {
         <View style={{ flex: 1, margin: 20 }}>
           {this.state.isFocused ? (
             <Content>
-              <Card>
-                <CardItem cardBody>
-                  {this.state.imagen ? this.renderImagen() : null}
-                </CardItem>
+              <Card style={{ paddingBottom: 20 }}>
+                {this.state.imagen ? this.renderImagen() : null}
                 <CardItem cardBody style={{ marginTop: 20, marginLeft: 10 }}>
                   <H2>
                     {this.state.restaurant.data
@@ -357,6 +498,14 @@ class DetailView extends Component {
                 {this.state.carnes ? this.renderCarnes() : null}
                 {this.state.pescados ? this.renderPescados() : null}
                 {this.state.especiales ? this.renderEspeciales() : null}
+                <CardItem cardBody style={{ marginTop: 20, marginLeft: 10 }}>
+                  <H2>Información práctica</H2>
+                </CardItem>
+                {this.state.descripcion ? this.renderDescripcion() : null}
+                {this.state.mapa ? this.renderMapa() : null}
+                {this.state.transporte_cercano ? this.renderTransporte() : null}
+                {this.state.horario ? this.renderHorario() : null}
+                {this.state.capacidad ? this.renderCapacidad() : null}
               </Card>
             </Content>
           ) : null}

@@ -46,9 +46,9 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.props.navigation.navigate("DetailView", {
-      data: restaurante
-    });
+    // this.props.navigation.navigate("DetailView", {
+    //   data: restaurante
+    // });
   }
 
   updateSearch = buscar => {

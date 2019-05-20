@@ -1,4 +1,4 @@
-import { ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE } from "../actions/actionTypes";
+import { ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE } from "../actions/actionTypes";
 
 const add_text_to_json = (json, key, value) => {
   /**
@@ -27,6 +27,7 @@ const delete_text_to_json = (json, key) => {
 }
 
 const initialState = {
+  loading:false,
   appJson: null,
   auth: false
 };
@@ -58,6 +59,18 @@ const reducer = (state = initialState, action) => {
         ...state,
         auth: false
       };
+    case LOADING_TRUE:{
+      return {
+        ...state,
+        loading:true
+      }
+    }
+    case LOADING_FALSE:{
+      return {
+        ...state,
+        loading:false
+      }
+    }
     default:
       return state;
   }

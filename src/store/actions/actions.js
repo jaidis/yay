@@ -1,4 +1,4 @@
-import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE} from './actionTypes'
+import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE} from './actionTypes'
 
 export const addText = (new_key, add_Text) => {
     return {
@@ -30,5 +30,17 @@ export const authValidated = () => {
 export const authDenegated = () => {
     return {
         type: AUTH_DENEGATE
+    }
+}
+
+export const loadingTrue = () => {
+    return {
+        type: LOADING_TRUE
+    }
+}
+
+export const loadingFalse = () => {
+    return {
+        type: LOADING_FALSE
     }
 }

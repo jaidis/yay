@@ -9,7 +9,7 @@ import {
 import { connect } from "react-redux";
 
 // REACT NAVIGATION
-import { createDrawerNavigator } from "react-navigation";
+import { createStackNavigator,createDrawerNavigator } from "react-navigation";
 
 // IMPORTAR LOS COMPONENTES DE NATIVE BASE
 import {
@@ -32,6 +32,7 @@ import DrawerNavigatorStyles from "./DrawerNavigatorStyles";
 
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
 import Home from '../Home/Home'
+import DetailView from '../DetailView/DetailView'
 import TabFirst from "../TabFirst/TabFirst";
 import TabSecond from "../TabSecond/TabSecond";
 
@@ -117,9 +118,28 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(DrawerNavigator);
 
+// const TestStackNavigator = createStackNavigator(
+//   {
+//     TabFirst: TabFirst,
+//     TabSecond: TabSecond
+//   },
+//   {
+//     headerMode: 'none',
+//     initialRouteName: "TabFirst",
+//     defaultNavigationOptions: {
+//       // headerTintColor: '#fff',
+//       // headerStyle: {
+//       //   backgroundColor: "rgba(46, 50, 72, 1)",
+//       // },
+//       headerVisible: false,
+//     },
+//   }
+// );
+
 export const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
+    DetailView: DetailView,
     TabFirst: TabFirst,
     TabSecond: TabSecond
   },

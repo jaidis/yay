@@ -110,3 +110,30 @@ export function menuGoBack(clasePadre, titulo = "OpenPark") {
     </StyleProvider>
   );
 }
+
+
+/**
+ * @description Esta función devuelve la barra superior de navegación con el icono de volver atrás, es necesario pasar la clase padre y el titulo que se desea mostrar
+ * @param {*} clasePadre
+ * @param {*} titulo
+ */
+export function menuGoHome(clasePadre, titulo = "OpenPark") {
+  return (
+    <StyleProvider style={getTheme(platform)}>
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => clasePadre.props.navigation.navigate("Home")}
+          >
+            <Icon name="arrow-back" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>{titulo}</Title>
+        </Body>
+        <Right />
+      </Header>
+    </StyleProvider>
+  );
+}

@@ -9,7 +9,7 @@ import {
 import { connect } from "react-redux";
 
 // REACT NAVIGATION
-import { createStackNavigator,createDrawerNavigator } from "react-navigation";
+import { createStackNavigator, createDrawerNavigator } from "react-navigation";
 
 // IMPORTAR LOS COMPONENTES DE NATIVE BASE
 import {
@@ -28,11 +28,14 @@ import {
   View
 } from "native-base";
 
+// Información del dispositivo
+import DeviceInfo from "react-native-device-info";
+
 import DrawerNavigatorStyles from "./DrawerNavigatorStyles";
 
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
-import Home from '../Home/Home'
-import DetailView from '../DetailView/DetailView'
+import Home from "../Home/Home";
+import DetailView from "../DetailView/DetailView";
 import TabFirst from "../TabFirst/TabFirst";
 import TabSecond from "../TabSecond/TabSecond";
 
@@ -45,11 +48,9 @@ class DrawerNavigator extends Component {
     return (
       <Container>
         <Content>
-        <ImageBackground
-              source={require("../../../assets/img/fondologomenu.jpg")}
-            style={
-              DrawerNavigatorStyles.background
-            }
+          <ImageBackground
+            source={require("../../../assets/img/fondologomenu.jpg")}
+            style={DrawerNavigatorStyles.background}
           >
             {/* <Image
               square
@@ -59,15 +60,11 @@ class DrawerNavigator extends Component {
               source={require("../../../assets/img/yay.jpg")}
             /> */}
             <Image
-            square
-            style={{ width: 80, height: 80 }}
-            source={require("../../../assets/img/yay-transparente.png")}
-          />
-            <Text
-              style={
-                DrawerNavigatorStyles.background_text
-              }
-            >
+              square
+              style={{ width: 80, height: 80 }}
+              source={require("../../../assets/img/yay-transparente.png")}
+            />
+            <Text style={DrawerNavigatorStyles.background_text}>
               {/* {this.state.user ? this.state.user.attributes.email : null} */}
               micorreo@gmail.com
             </Text>
@@ -75,19 +72,19 @@ class DrawerNavigator extends Component {
           <ListItem
             icon
             button
-            onPress={() => this.props.navigation.navigate("TabFirst")}
+            onPress={() => this.props.navigation.navigate("Profile")}
           >
             <Left>
-              <Button style={{ backgroundColor: "#8F8E93" }}>
-                <Icon name="notifications" />
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon name="contact" />
               </Button>
             </Left>
             <Body>
-              <Text>TabFirst</Text>
+              <Text>Mis datos</Text>
             </Body>
-            <Right>
+            {/* <Right>
               <Text>1</Text>
-            </Right>
+            </Right> */}
           </ListItem>
           <ListItem
             icon
@@ -95,14 +92,42 @@ class DrawerNavigator extends Component {
             onPress={() => this.props.navigation.navigate("TabSecond")}
           >
             <Left>
-              <Button style={{ backgroundColor: "#4CDA64" }}>
+              <Button style={{ backgroundColor: "#2E3448" }}>
                 <Icon name="home" />
               </Button>
             </Left>
             <Body>
-              <Text>TabSecond</Text>
+              <Text>Mis reservas</Text>
             </Body>
             <Right>{/* <Icon active name="arrow-forward" /> */}</Right>
+          </ListItem>
+          <ListItem
+            icon
+            button
+            onPress={() => this.props.navigation.navigate("Favorites")}
+          >
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon name="star" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Mis favoritos</Text>
+            </Body>
+          </ListItem>
+
+          <Separator />
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon type="FontAwesome" name="info-circle" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>
+                Versión App {DeviceInfo.getVersion()}
+              </Text>
+            </Body>
           </ListItem>
         </Content>
       </Container>

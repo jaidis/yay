@@ -22,7 +22,7 @@ export default StyleSheet.create({
   input_container_style: {
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "rgba(110, 120, 170, 1)",
+    borderColor: "#6E78AA",
     height: 50,
     marginVertical: 10
   },
@@ -37,7 +37,7 @@ export default StyleSheet.create({
     width: SCREEN_WIDTH * 0.8,
     borderRadius: 15,
     height: 50,
-    backgroundColor: "rgba(110, 120, 170, 1)"
+    backgroundColor: "#6E78AA"
   },
   button_container_style:{
     marginTop: 20

@@ -36,52 +36,74 @@ class DetailView extends Component {
 
   async checkData() {
     if (this.state.restaurant) {
-      if (this.state.restaurant.data.logo) {
-        this.setState({ imagen: true });
-      }
+      let t_imagen,
+        t_entrantes,
+        t_ensaladas,
+        t_sopas,
+        t_carnes,
+        t_pescados,
+        t_especiales,
+        t_descripcion,
+        t_mapa,
+        t_transporte_cercano,
+        t_horario;
 
-      if (this.state.restaurant.data.entrees.length > 0) {
-        this.setState({ entrantes: true });
-      }
+      this.state.restaurant.data.logo ? (imagen = true) : (imagen = false);
+      this.state.restaurant.data.entrees.length > 0
+        ? (t_entrantes = true)
+        : (t_entrantes = false);
+      this.state.restaurant.data.salads.length > 0
+        ? (t_ensaladas = true)
+        : (t_ensaladas = false);
 
-      if (this.state.restaurant.data.salads.length > 0) {
-        this.setState({ ensaladas: true });
-      }
+      this.state.restaurant.data.soups.length > 0
+        ? (t_sopas = true)
+        : (t_sopas = false);
 
-      if (this.state.restaurant.data.soups.length > 0) {
-        this.setState({ sopas: true });
-      }
+      this.state.restaurant.data.meats.length > 0
+        ? (t_carnes = true)
+        : (t_carnes = false);
 
-      if (this.state.restaurant.data.meats.length > 0) {
-        this.setState({ carnes: true });
-      }
+      this.state.restaurant.data.fishes.length > 0
+        ? (t_pescados = true)
+        : (t_pescados = false);
 
-      if (this.state.restaurant.data.fishes.length > 0) {
-        this.setState({ pescados: true });
-      }
+      this.state.restaurant.data.specialties.length > 0
+        ? (t_especiales = true)
+        : (t_especiales = false);
 
-      if (this.state.restaurant.data.specialties.length > 0) {
-        this.setState({ especiales: true });
-      }
+      this.state.restaurant.data.description
+        ? (t_descripcion = true)
+        : (t_descripcion = false);
 
-      if (this.state.restaurant.data.description) {
-        this.setState({ descripcion: true });
-      }
+      this.state.restaurant.data.map != undefined &&
+      this.state.restaurant.data.map != false
+        ? (t_mapa = true)
+        : (t_mapa = false);
 
-      if (
-        this.state.restaurant.data.map != undefined &&
-        this.state.restaurant.data.map != false
-      ) {
-        this.setState({ mapa: true });
-      }
+      this.state.restaurant.data.transport_nearby
+        ? (t_transporte_cercano = true)
+        : (t_transporte_cercano = false);
 
-      if (this.state.restaurant.data.transport_nearby) {
-        this.setState({ transporte_cercano: true });
-      }
+      this.state.restaurant.data.schedule.length > 0
+        ? (t_horario = true)
+        : (t_horario = false);
 
-      if (this.state.restaurant.data.schedule.length > 0) {
-        this.setState({ horario: true });
-      }
+      this.setState({
+        imagen: imagen,
+        entrantes: t_entrantes,
+        ensaladas: t_ensaladas,
+        sopas: t_sopas,
+        carnes: t_carnes,
+        pescados: t_pescados,
+        especiales: t_especiales,
+        descripcion: t_descripcion,
+        mapa: t_mapa,
+        transporte_cercano: t_transporte_cercano,
+        horario: t_horario
+      });
+
+      console.log("Datos comprobados");
     }
   }
 
@@ -156,7 +178,9 @@ class DetailView extends Component {
           name={this.state.favorito ? "star" : "star-o"}
           type="font-awesome"
           color="#6E78AA"
-          onPress={() => this.setState(state => ({ favorito: !state.favorito }))}
+          onPress={() =>
+            this.setState(state => ({ favorito: !state.favorito }))
+          }
           containerStyle={{
             position: "absolute",
             alignItems: "center",
@@ -515,4 +539,22 @@ class DetailView extends Component {
   }
 }
 
-export default DetailView;
+const mapStateToProps = state => {
+  return {
+    appJson: state.mainReducer.appJson,
+    loading_bar: state.mainReducer.loading
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    // dispatching plain actions
+    loadingTrue: () => dispatch({ type: "LOADING_TRUE" }),
+    loadingFalse: () => dispatch({ type: "LOADING_FALSE" })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DetailView);

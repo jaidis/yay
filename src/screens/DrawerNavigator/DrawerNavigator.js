@@ -33,12 +33,6 @@ import DeviceInfo from "react-native-device-info";
 
 import DrawerNavigatorStyles from "./DrawerNavigatorStyles";
 
-// IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
-import Home from "../Home/Home";
-import DetailView from "../DetailView/DetailView";
-import TabFirst from "../TabFirst/TabFirst";
-import TabSecond from "../TabSecond/TabSecond";
-
 class DrawerNavigator extends Component {
   state = {
     appJson: ""
@@ -124,11 +118,19 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>
-                Versión App {DeviceInfo.getVersion()}
-              </Text>
+              <Text>Versión App {DeviceInfo.getVersion()}</Text>
             </Body>
           </ListItem>
+          {/* <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon type="FontAwesome" name="info-circle" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Valor de Loading: {this.props.loading_bar?"True":"False"}</Text>
+            </Body>
+          </ListItem> */}
         </Content>
       </Container>
     );
@@ -137,11 +139,20 @@ class DrawerNavigator extends Component {
 
 const mapStateToProps = state => {
   return {
-    appJson: state.mainReducer.appJson
+    appJson: state.mainReducer.appJson,
+    loading_bar: state.mainReducer.loading
   };
 };
 
-export default connect(mapStateToProps)(DrawerNavigator);
+const mapDispatchToProps = dispatch => {
+  return {
+    // dispatching plain actions
+    loadingTrue: () => dispatch({ type: "LOADING_TRUE" }),
+    loadingFalse: () => dispatch({ type: "LOADING_FALSE" })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerNavigator);
 
 // const TestStackNavigator = createStackNavigator(
 //   {
@@ -160,15 +171,3 @@ export default connect(mapStateToProps)(DrawerNavigator);
 //     },
 //   }
 // );
-
-export const AppDrawerNavigator = createDrawerNavigator(
-  {
-    Home: Home,
-    DetailView: DetailView,
-    TabFirst: TabFirst,
-    TabSecond: TabSecond
-  },
-  {
-    contentComponent: DrawerNavigator
-  }
-);

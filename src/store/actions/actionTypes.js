@@ -5,3 +5,5 @@ export const AUTH_OK = 'AUTH_OK';
 export const AUTH_DENEGATE = 'AUTH_DENEGATE';
 export const LOADING_TRUE = 'LOADING_TRUE';
 export const LOADING_FALSE = 'LOADING_FALSE';
+export const FAVORITE_TRUE = 'FAVORITE_TRUE';
+export const FAVORITE_FALSE = 'FAVORITE_FALSE';

@@ -1,4 +1,15 @@
-import { ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE } from "../actions/actionTypes";
+import {
+  ADD_TEXT_JSON,
+  DELETE_TEXT_JSON,
+  AUTH_CHECK,
+  AUTH_OK,
+  AUTH_DENEGATE,
+  LOADING_TRUE,
+  LOADING_FALSE,
+  FAVORITE_TRUE,
+  FAVORITE_FALSE
+} from "../actions/actionTypes";
+import user from "../../../user.json";
 
 const add_text_to_json = (json, key, value) => {
   /**
@@ -24,12 +35,17 @@ const delete_text_to_json = (json, key) => {
     delete tempJson[key];
   }
   return JSON.stringify(tempJson);
-}
+};
+
+// const initialState = {
+//   appJson: null,
+// };
 
 const initialState = {
-  loading:false,
-  appJson: null,
-  auth: false
+  loading: false,
+  appJson: user,
+  auth: false,
+  favorite: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,7 +53,11 @@ const reducer = (state = initialState, action) => {
     case ADD_TEXT_JSON:
       return {
         ...state,
-        appJson: add_text_to_json(state.appJson, action.keyToAdd, action.textToAdd)
+        appJson: add_text_to_json(
+          state.appJson,
+          action.keyToAdd,
+          action.textToAdd
+        )
       };
     case DELETE_TEXT_JSON:
       return {
@@ -59,17 +79,29 @@ const reducer = (state = initialState, action) => {
         ...state,
         auth: false
       };
-    case LOADING_TRUE:{
+    case LOADING_TRUE: {
       return {
         ...state,
-        loading:true
-      }
+        loading: true
+      };
     }
-    case LOADING_FALSE:{
+    case LOADING_FALSE: {
       return {
         ...state,
-        loading:false
-      }
+        loading: false
+      };
+    }
+    case FAVORITE_TRUE: {
+      return {
+        ...state,
+        favorite: true
+      };
+    }
+    case FAVORITE_FALSE: {
+      return {
+        ...state,
+        favorite: false
+      };
     }
     default:
       return state;

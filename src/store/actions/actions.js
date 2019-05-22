@@ -1,46 +1,58 @@
-import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE} from './actionTypes'
+import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE} from './actionTypes';
 
 export const addText = (new_key, add_Text) => {
-    return {
-        type: ADD_TEXT_JSON,
-        keyToAdd: new_key,
-        textToAdd: add_Text
-    }
-}
+  return {
+    type: ADD_TEXT_JSON,
+    keyToAdd: new_key,
+    textToAdd: add_Text
+  };
+};
 
-export const deleteText = (delete_key) => {
-    return {
-        type: DELETE_TEXT_JSON,
-        keyToDelete: delete_key
-    }
-}
+export const deleteText = delete_key => {
+  return {
+    type: DELETE_TEXT_JSON,
+    keyToDelete: delete_key
+  };
+};
 
 export const authCheck = () => {
-    return {
-        type: AUTH_CHECK
-    }
-}
+  return {
+    type: AUTH_CHECK
+  };
+};
 
 export const authValidated = () => {
-    return {
-        type: AUTH_OK
-    }
-}
+  return {
+    type: AUTH_OK
+  };
+};
 
 export const authDenegated = () => {
-    return {
-        type: AUTH_DENEGATE
-    }
-}
+  return {
+    type: AUTH_DENEGATE
+  };
+};
 
 export const loadingTrue = () => {
-    return {
-        type: LOADING_TRUE
-    }
-}
+  return {
+    type: LOADING_TRUE
+  };
+};
 
 export const loadingFalse = () => {
-    return {
-        type: LOADING_FALSE
-    }
-}
+  return {
+    type: LOADING_FALSE
+  };
+};
+
+export const favoriteTrue = () => {
+  return {
+    type: FAVORITE_TRUE
+  };
+};
+
+export const favoriteFalse = () => {
+  return {
+    type: FAVORITE_FALSE
+  };
+};

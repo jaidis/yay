@@ -25,7 +25,7 @@ import {
 } from "native-base";
 import ResponsiveImage from "react-native-responsive-image";
 // import Icon from "react-native-vector-icons";
-import { addText } from "../../store/actions/index";
+import { addText, loadingTrue, loadingFalse } from "../../store/actions/index";
 import { connect } from "react-redux";
 
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
@@ -35,9 +35,9 @@ import restaurante from "../../../restaurante";
 import restaurante2 from "../../../restaurante2";
 
 class Home extends Component {
-  static navigationOptions = {
-    title: "Home"
-  };
+  // static navigationOptions = {
+  //   title: "Home"
+  // };
 
   state = {
     appJson: "",
@@ -49,6 +49,7 @@ class Home extends Component {
     // this.props.navigation.navigate("DetailView", {
     //   data: restaurante
     // });
+    this.props.navigation.navigate("Favorites");
   }
 
   updateSearch = buscar => {
@@ -273,7 +274,11 @@ class Home extends Component {
                 </CardItem>
                 <CardItem>
                   <Left style={{ marginLeft: 0 }}>
-                    <Button>
+                    <Button
+                      onPress={() => {
+                        // this.props.addKeyValueJSON("test", "content_test");
+                      }}
+                    >
                       {/* <Icon active name="thumbs-up" /> */}
                       <Text>Categoria: Arroz</Text>
                     </Button>
@@ -307,7 +312,9 @@ class Home extends Component {
                 </CardItem>
                 <CardItem>
                   <Left style={{ marginLeft: 0 }}>
-                    <Button>
+                    <Button onPress={()=>{
+                      this.props.h_loadingTrue()
+                    }}>
                       {/* <Icon active name="thumbs-up" /> */}
                       <Text>Categoria: Burguer</Text>
                     </Button>
@@ -339,7 +346,9 @@ class Home extends Component {
                 </CardItem>
                 <CardItem>
                   <Left style={{ marginLeft: 0 }}>
-                    <Button>
+                    <Button onPress={()=>{
+                      this.props.h_loadingFalse()
+                    }}>
                       {/* <Icon active name="thumbs-up" /> */}
                       <Text>Categoria</Text>
                     </Button>
@@ -390,10 +399,15 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, props) => {
+const mapDispatchToProps = dispatch => {
   return {
-    addKeyValueJSON: (key, value) => dispatch(addText(props.key, props.value))
+    addKeyValueJSON: (key, value) => dispatch(addText(key, value)),
+    h_loadingTrue: () => dispatch(loadingTrue()),
+    h_loadingFalse: () => dispatch(loadingFalse())
   };
 };
 
-export default connect(mapStateToProps)(Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

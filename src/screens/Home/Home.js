@@ -79,7 +79,7 @@ class Home extends Component {
             <Swiper
               removeClippedSubviews={true}
               loop={true}
-              onIndexChanged={index => console.log(index)}
+              // onIndexChanged={index => console.log(index)}
               nextButton={
                 <Text style={{ color: "#fff", fontSize: 26, padding: 10 }}>
                   ›
@@ -92,6 +92,8 @@ class Home extends Component {
               }
               showsButtons={true}
               showsPagination={true}
+              autoplay={true}
+              autoplayTimeout={5}
             >
               <View
                 style={{

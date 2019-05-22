@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Image } from "react-native";
 import { connect } from "react-redux";
+import { favoriteTrue, favoriteFalse } from "../../store/actions/index";
 
 import {
   Container,
@@ -30,8 +31,7 @@ class DetailView extends Component {
 
   state = {
     restaurant: false,
-    isFocused: false,
-    favorito: false
+    isFocused: false
   };
 
   async checkData() {
@@ -145,9 +145,9 @@ class DetailView extends Component {
           mapa: false,
           transporte_cercano: false,
           horario: false,
-          capacidad: false,
-          favorito: false
+          capacidad: false
         });
+        this.props.c_favoriteFalse();
         console.log("me voy", this.props.navigation.getParam("data", false));
       })
     ];
@@ -175,11 +175,13 @@ class DetailView extends Component {
 
         <Icon
           reverse
-          name={this.state.favorito ? "star" : "star-o"}
+          name={this.props.favorite ? "star" : "star-o"}
           type="font-awesome"
           color="#6E78AA"
           onPress={() =>
-            this.setState(state => ({ favorito: !state.favorito }))
+            this.props.favorite
+              ? this.props.c_favoriteFalse()
+              : this.props.c_favoriteTrue()
           }
           containerStyle={{
             position: "absolute",
@@ -542,15 +544,15 @@ class DetailView extends Component {
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
-    loading_bar: state.mainReducer.loading
+    loading_bar: state.mainReducer.loading,
+    favorite: state.mainReducer.favorite
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    // dispatching plain actions
-    loadingTrue: () => dispatch({ type: "LOADING_TRUE" }),
-    loadingFalse: () => dispatch({ type: "LOADING_FALSE" })
+    c_favoriteTrue: () => dispatch(favoriteTrue()),
+    c_favoriteFalse: () => dispatch(favoriteFalse())
   };
 };
 

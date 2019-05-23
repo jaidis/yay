@@ -60,7 +60,7 @@ class Favorites extends Component {
     return (
       <ScrollView>
         <FlatGrid
-          itemDimension={130}
+          itemDimension={150}
           items={this.props.appJson.userdata.favorites}
           style={{ marginTop: 10, flex: 1 }}
           // staticDimension={300}
@@ -130,7 +130,7 @@ class Favorites extends Component {
   render() {
     return (
       <View style={FavoritesStyles.container}>
-        {NaviteBaseMenu.menuGoBack(this, "Favorites")}
+        {NaviteBaseMenu.menuGoHome(this, "Favorites")}
         {this.state.count_favorites
           ? this.renderFavorites()
           : this.renderEmpty()}

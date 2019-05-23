@@ -7,7 +7,9 @@ import {
   LOADING_TRUE,
   LOADING_FALSE,
   FAVORITE_TRUE,
-  FAVORITE_FALSE
+  FAVORITE_FALSE,
+  ADD_RESTAURANT,
+  DELETE_RESTAURANT
 } from "../actions/actionTypes";
 import user from "../../../user.json";
 
@@ -44,6 +46,7 @@ const delete_text_to_json = (json, key) => {
 const initialState = {
   loading: false,
   appJson: user,
+  restaurantJson: false,
   auth: false,
   favorite: false
 };
@@ -101,6 +104,18 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         favorite: false
+      };
+    }
+    case ADD_RESTAURANT: {
+      return {
+        ...state,
+        restaurantJson: action.restaurantJSON
+      };
+    }
+    case DELETE_RESTAURANT: {
+      return {
+        ...state,
+        restaurantJson: false
       };
     }
     default:

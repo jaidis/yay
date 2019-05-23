@@ -7,5 +7,7 @@ export {
   loadingTrue,
   loadingFalse, 
   favoriteTrue,
-  favoriteFalse
+  favoriteFalse,
+  addRestaurant,
+  deleteRestaurant
 } from "./actions";

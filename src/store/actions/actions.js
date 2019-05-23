@@ -1,4 +1,4 @@
-import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE} from './actionTypes';
+import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE, ADD_RESTAURANT, DELETE_RESTAURANT} from './actionTypes';
 
 export const addText = (new_key, add_Text) => {
   return {
@@ -54,5 +54,18 @@ export const favoriteTrue = () => {
 export const favoriteFalse = () => {
   return {
     type: FAVORITE_FALSE
+  };
+};
+
+export const addRestaurant = restaurant => {
+  return {
+    type: ADD_RESTAURANT,
+    restaurantJSON: restaurant
+  };
+};
+
+export const deleteRestaurant = () => {
+  return {
+    type: DELETE_RESTAURANT
   };
 };

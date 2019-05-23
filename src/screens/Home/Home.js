@@ -6,7 +6,7 @@ import {
   Image,
   ImageBackground
 } from "react-native";
-import { SearchBar } from "react-native-elements";
+import { SearchBar, Icon } from "react-native-elements";
 import {
   Container,
   Header,
@@ -14,7 +14,6 @@ import {
   Card,
   CardItem,
   Thumbnail,
-  Icon,
   Text,
   Button,
   Left,
@@ -25,6 +24,7 @@ import {
 } from "native-base";
 import ResponsiveImage from "react-native-responsive-image";
 // import Icon from "react-native-vector-icons";
+import { Col, Row, Grid } from "react-native-easy-grid";
 import { addText, loadingTrue, loadingFalse } from "../../store/actions/index";
 import { connect } from "react-redux";
 
@@ -34,370 +34,202 @@ import Swiper from "react-native-swiper";
 import restaurante from "../../../restaurante";
 import restaurante2 from "../../../restaurante2";
 
-class Home extends Component {
-  // static navigationOptions = {
-  //   title: "Home"
-  // };
+import HomeStyles from "./HomeStyles";
 
+class Home extends Component {
+  /**
+   *
+   */
   state = {
     appJson: "",
     search: "",
-    searchLoading: false
+    searchLoading: false,
+    load_content: false
   };
 
+  /**
+   *
+   */
   componentDidMount() {
     // this.props.navigation.navigate("DetailView", {
     //   data: restaurante
     // });
-    this.props.navigation.navigate("Favorites");
-  }
+    // this.props.navigation.navigate("Favorites");
 
+    if (this.props.appJson.userdata) {
+      this.setState({ load_content: true });
+    }
+  }
+  /**
+   *
+   * @param {*} buscar
+   */
   updateSearch = buscar => {
     if (buscar != "") this.setState({ search: buscar, searchLoading: true });
     else this.setState({ searchLoading: false });
   };
 
+  /**
+   *
+   */
+  loadContent = () => {
+    return (
+      <View>
+        <View>
+          <H2 style={HomeStyles.mainTitle}>LUGARES DESTACADOS</H2>
+        </View>
+
+        <View style={HomeStyles.swiper_view}>
+          <Swiper
+            removeClippedSubviews={true}
+            loop={true}
+            // onIndexChanged={index => console.log(index)}
+            prevButton={
+              <Icon
+                name="chevron-left"
+                color="#FFF"
+                size={30}
+                iconStyle={HomeStyles.swiper_prev_button}
+              />
+            }
+            nextButton={
+              <Icon
+                name="chevron-right"
+                color="#FFF"
+                size={30}
+                iconStyle={HomeStyles.swiper_next_button}
+              />
+            }
+            showsButtons={true}
+            showsPagination={true}
+            autoplay={true}
+            autoplayTimeout={10}
+          >
+            {this.props.appJson.userdata.promoted_content.map(
+              (promoted, index) => {
+                return (
+                  <View key={index} style={HomeStyles.swiper_internal_view}>
+                    <ImageBackground
+                      source={{ uri: promoted.logo }}
+                      style={HomeStyles.swiper_image_background_style}
+                      imageStyle={
+                        HomeStyles.swiper_image_background_image_style
+                      }
+                    >
+                      <H3
+                        style={HomeStyles.swiper_text}
+                        onPress={() => {
+                          console.log("Promoted ID: ", promoted.id);
+                          this.props.navigation.navigate("DetailView", {
+                            data: restaurante
+                          });
+                        }}
+                      >
+                        {promoted.name}
+                      </H3>
+                    </ImageBackground>
+                  </View>
+                );
+              }
+            )}
+          </Swiper>
+        </View>
+
+        <H2 style={HomeStyles.title}>SITIOS CERCA DE TI</H2>
+        <View>
+          <Content>
+            {this.props.appJson.userdata.nearby_content.map((nearby, index) => {
+              return (
+                <Grid key={index} style={HomeStyles.nearby_grid}>
+                  <Col size={7} />
+                  <Col size={86}>
+                    <Card>
+                      <CardItem
+                        cardBody
+                        button
+                        onPress={() => {
+                          this.props.navigation.navigate("DetailView", {
+                            data: restaurante
+                          });
+                        }}
+                      >
+                        <Image
+                          source={{ uri: nearby.logo }}
+                          style={HomeStyles.nearby_image}
+                        />
+                      </CardItem>
+                      <CardItem cardBody>
+                        <Text style={HomeStyles.nearby_text}>
+                          {nearby.name}
+                        </Text>
+                      </CardItem>
+                      <CardItem cardBody>
+                        <Left>
+                          <Text>Precio medio: {nearby.price} €</Text>
+                        </Left>
+                        <Right style={HomeStyles.nearby_right}>
+                          <Text>Puntuación: {nearby.score}</Text>
+                        </Right>
+                      </CardItem>
+                      <CardItem>
+                        {nearby.categories.map((category, index) => {
+                          return (
+                            <View
+                              style={HomeStyles.nearby_categories_view}
+                              key={index}
+                            >
+                              <Button
+                                onPress={() => {
+                                  console.log("Category Id: ", category.id);
+                                }}
+                              >
+                                {/* <Icon active name="thumbs-up" /> */}
+                                <Text>{category.value}</Text>
+                              </Button>
+                            </View>
+                          );
+                        })}
+                      </CardItem>
+                    </Card>
+                  </Col>
+                  <Col size={7} />
+                </Grid>
+              );
+            })}
+          </Content>
+        </View>
+      </View>
+    );
+  };
+
+  /**
+   *
+   */
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={HomeStyles.container}>
         {/* {NaviteBaseMenu.menuLogo(this)} */}
 
+        <SearchBar
+          placeholder="Type Here..."
+          onChangeText={this.updateSearch}
+          value={this.state.search}
+          showLoading={this.state.searchLoading}
+          // platform={"ios"}
+        />
+
         <ScrollView>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={this.updateSearch}
-            value={this.state.search}
-            showLoading={this.state.searchLoading}
-            // platform={"ios"}
-          />
-
-          <H2 style={{ textAlign: "center", paddingTop: 30, padding: 20 }}>
-            LUGARES DESTACADOS
-          </H2>
-
-          <View style={{ height: 200, padding: 5 }}>
-            <Swiper
-              removeClippedSubviews={true}
-              loop={true}
-              // onIndexChanged={index => console.log(index)}
-              nextButton={
-                <Text style={{ color: "#fff", fontSize: 26, padding: 10 }}>
-                  ›
-                </Text>
-              }
-              prevButton={
-                <Text style={{ color: "#fff", fontSize: 26, padding: 10 }}>
-                  ‹
-                </Text>
-              }
-              showsButtons={true}
-              showsPagination={true}
-              autoplay={true}
-              autoplayTimeout={5}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <ImageBackground
-                  source={{ uri: "https://i.imgur.com/B6jXDpJ.jpg" }}
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 10
-                  }}
-                  imageStyle={{
-                    opacity: 0.5,
-                    borderRadius: 10,
-                    backgroundColor: "#000"
-                  }}
-                >
-                  <H3
-                    style={{
-                      color: "#fff",
-                      textAlign: "center",
-                      fontWeight: "normal",
-                      padding: 20
-                    }}
-                    onPress={() => {
-                      this.props.navigation.navigate("DetailView", {
-                        data: restaurante
-                      });
-                    }}
-                  >
-                    Pijo's Restaurant
-                  </H3>
-                </ImageBackground>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <ImageBackground
-                  source={{ uri: "https://i.imgur.com/XoQ4Z9q.jpg" }}
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 10
-                  }}
-                  imageStyle={{
-                    opacity: 0.65,
-                    borderRadius: 10,
-                    backgroundColor: "#555555"
-                  }}
-                >
-                  <H3
-                    style={{
-                      color: "#fff",
-                      textAlign: "center",
-                      fontWeight: "normal",
-                      padding: 20
-                    }}
-                    onPress={() => {
-                      this.props.navigation.navigate("DetailView", {
-                        data: restaurante2
-                      });
-                    }}
-                  >
-                    Burguer's Restaurant
-                  </H3>
-                </ImageBackground>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <ImageBackground
-                  source={{ uri: "https://i.imgur.com/DIWQi4c.jpg" }}
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 10
-                  }}
-                  imageStyle={{
-                    opacity: 0.65,
-                    borderRadius: 10,
-                    backgroundColor: "#555555"
-                  }}
-                >
-                  <H3
-                    style={{
-                      color: "#fff",
-                      textAlign: "center",
-                      fontWeight: "normal",
-                      padding: 20
-                    }}
-                    onPress={() => {
-                      this.props.navigation.navigate("DetailView");
-                    }}
-                  >
-                    Casa di Pepe
-                  </H3>
-                </ImageBackground>
-              </View>
-            </Swiper>
-          </View>
-
-          {/* <Card
-            containerStyle={{ marginTop: 15, marginBottom: 15 }}
-            title="TILES"
-          >
-            <View style={{ paddingTop: 20 }}>
-              <Tile
-                imageSrc={{
-                  uri:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Half_Dome_from_Glacier_Point%2C_Yosemite_NP_-_Diliff.jpg/320px-Half_Dome_from_Glacier_Point%2C_Yosemite_NP_-_Diliff.jpg"
-                }}
-                title="Half Dome, Yosemite"
-                titleStyle={{ fontSize: 20 }}
-                activeOpacity={1}
-                width={300}
-                contentContainerStyle={{ height: 70 }}
-              >
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "space-between"
-                  }}
-                >
-                  <Text style={{ color: "green" }}>Visit</Text>
-                  <Text style={{ color: "blue" }}>Find out More</Text>
-                </View>
-              </Tile>
-            </View>
-          </Card> */}
-
-          <H2 style={{ textAlign: "center", padding: 20 }}>
-            SITIOS CERCA DE TI
-          </H2>
-
-          <View>
-            <Content>
-              <Card>
-                <CardItem
-                  cardBody
-                  button
-                  onPress={() => {
-                    this.props.navigation.navigate("DetailView", {
-                      data: restaurante
-                    });
-                  }}
-                >
-                  <Image
-                    source={{ uri: "https://i.imgur.com/B6jXDpJ.jpg" }}
-                    style={{
-                      height: 200,
-                      width: null,
-                      flex: 1
-                    }}
-                  />
-                </CardItem>
-                <CardItem style={{ margin: 0 }}>
-                  <Text>Pijo's Restaurant</Text>
-                </CardItem>
-                <CardItem>
-                  <Left style={{ marginLeft: 0 }}>
-                    <Button
-                      onPress={() => {
-                        // this.props.addKeyValueJSON("test", "content_test");
-                      }}
-                    >
-                      {/* <Icon active name="thumbs-up" /> */}
-                      <Text>Categoria: Arroz</Text>
-                    </Button>
-                  </Left>
-                  <Right>
-                    <Text>Precio medio: XX€</Text>
-                  </Right>
-                </CardItem>
-              </Card>
-              <Card>
-                <CardItem
-                  cardBody
-                  button
-                  onPress={() => {
-                    this.props.navigation.navigate("DetailView", {
-                      data: restaurante2
-                    });
-                  }}
-                >
-                  <Image
-                    source={{ uri: "https://i.imgur.com/XoQ4Z9q.jpg" }}
-                    style={{
-                      height: 200,
-                      width: null,
-                      flex: 1
-                    }}
-                  />
-                </CardItem>
-                <CardItem style={{ margin: 0 }}>
-                  <Text>Burguer's Restaurant</Text>
-                </CardItem>
-                <CardItem>
-                  <Left style={{ marginLeft: 0 }}>
-                    <Button onPress={()=>{
-                      this.props.h_loadingTrue()
-                    }}>
-                      {/* <Icon active name="thumbs-up" /> */}
-                      <Text>Categoria: Burguer</Text>
-                    </Button>
-                  </Left>
-                  <Right>
-                    <Text>Precio medio: XX€</Text>
-                  </Right>
-                </CardItem>
-              </Card>
-              <Card>
-                <CardItem
-                  cardBody
-                  button
-                  onPress={() => {
-                    this.props.navigation.navigate("DetailView");
-                  }}
-                >
-                  <Image
-                    source={{ uri: "https://i.imgur.com/DIWQi4c.jpg" }}
-                    style={{
-                      height: 200,
-                      width: null,
-                      flex: 1
-                    }}
-                  />
-                </CardItem>
-                <CardItem style={{ margin: 0 }}>
-                  <Text>Casa di Pepe</Text>
-                </CardItem>
-                <CardItem>
-                  <Left style={{ marginLeft: 0 }}>
-                    <Button onPress={()=>{
-                      this.props.h_loadingFalse()
-                    }}>
-                      {/* <Icon active name="thumbs-up" /> */}
-                      <Text>Categoria</Text>
-                    </Button>
-                  </Left>
-                  <Right>
-                    <Text>Precio medio: XX€</Text>
-                  </Right>
-                </CardItem>
-              </Card>
-            </Content>
-          </View>
+          {this.state.load_content ? this.loadContent() : null}
         </ScrollView>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  wrapper: {},
-  slide1: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#9DD6EB"
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#97CAE5"
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#92BBD9"
-  },
-  text: {
-    color: "#fff",
-    fontSize: 30,
-    fontWeight: "bold"
-  }
-});
-
 const mapStateToProps = state => {
   return {
-    appJson: state.mainReducer.appJson
+    appJson: state.mainReducer.appJson,
+    loading_bar: state.mainReducer.loading
   };
 };
 

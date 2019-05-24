@@ -60,6 +60,7 @@ class Home extends Component {
     //   data: restaurante
     // });
     // this.props.navigation.navigate("Favorites");
+    // this.props.navigation.navigate("Profile");
 
     if (this.props.appJson.userdata) {
       this.setState({ load_content: true });

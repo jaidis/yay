@@ -14,8 +14,9 @@ import SignUp from "./src/screens/SignUp/SignUp";
 
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
 import Home from "./src/screens/Home/Home";
-import DetailView from "./src/screens/DetailView/DetailView";
+import Profile from "./src/screens/Profile/Profile";
 import Favorites from "./src/screens/Favorites/Favorites";
+import DetailView from "./src/screens/DetailView/DetailView";
 import TabFirst from "./src/screens/TabFirst/TabFirst";
 import TabSecond from "./src/screens/TabSecond/TabSecond";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
@@ -66,10 +67,24 @@ const FavoritesStackNavigator = createStackNavigator(
   }
 );
 
+const ProfileStackNavigator = createStackNavigator(
+  {
+    Profile: Profile,
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "Profile",
+    defaultNavigationOptions: {
+      headerVisible: false
+    }
+  }
+);
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
     DetailView: DetailView,
+    ProfileNavigator: ProfileStackNavigator,
     FavoritesNavigator: FavoritesStackNavigator,
     TabFirst: TabFirst,
     TabSecond: TabSecond

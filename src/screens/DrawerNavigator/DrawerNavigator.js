@@ -83,6 +83,23 @@ class DrawerNavigator extends Component {
           <ListItem
             icon
             button
+            onPress={() => this.props.navigation.navigate("Payments")}
+          >
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon name="card" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Formas de pago</Text>
+            </Body>
+            {/* <Right>
+              <Text>1</Text>
+            </Right> */}
+          </ListItem>
+          <ListItem
+            icon
+            button
             onPress={() => this.props.navigation.navigate("TabSecond")}
           >
             <Left>
@@ -91,7 +108,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Mis reservas</Text>
+              <Text>Reservas</Text>
             </Body>
             <Right>{/* <Icon active name="arrow-forward" /> */}</Right>
           </ListItem>
@@ -106,10 +123,23 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Mis favoritos</Text>
+              <Text>Favoritos</Text>
             </Body>
           </ListItem>
-
+          <ListItem
+            icon
+            button
+            onPress={() => this.props.navigation.navigate("Categories")}
+          >
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon name="list-box" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Categorias</Text>
+            </Body>
+          </ListItem>
           <Separator />
           <ListItem icon>
             <Left>
@@ -119,6 +149,22 @@ class DrawerNavigator extends Component {
             </Left>
             <Body>
               <Text>Versión App {DeviceInfo.getVersion()}</Text>
+            </Body>
+          </ListItem>
+          <ListItem
+            icon
+            button
+            onPress={() => {
+              this.props.navigation.navigate("SignIn");
+            }}
+          >
+            <Left>
+              <Button style={{ backgroundColor: "#2E3448" }}>
+                <Icon name="log-out" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Cerrar sesión</Text>
             </Body>
           </ListItem>
           {/* <ListItem icon>
@@ -152,7 +198,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerNavigator);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DrawerNavigator);
 
 // const TestStackNavigator = createStackNavigator(
 //   {

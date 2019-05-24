@@ -13,10 +13,12 @@ import {
   Right,
   Body,
   H2,
-  H3
+  H3,
+  Button,
+  Icon
 } from "native-base";
 
-import { Icon } from "react-native-elements";
+import { Icon as IconElements } from "react-native-elements";
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
@@ -112,9 +114,14 @@ class DetailView extends Component {
    */
   async componentDidMount() {
     // console.log(await this.props.navigation.getParam("data", false));
+    // await this.setState({
+    //   isFocused: true,
+    //   restaurant: this.props.navigation.getParam("data", false)
+    // });
+
     await this.setState({
       isFocused: true,
-      restaurant: this.props.navigation.getParam("data", false)
+      restaurant: this.props.restaurantJson
     });
 
     this.checkData();
@@ -122,9 +129,14 @@ class DetailView extends Component {
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
         console.log("inicio", this.props.navigation.getParam("data", false));
+        // await this.setState({
+        //   isFocused: true,
+        //   restaurant: this.props.navigation.getParam("data", false)
+        // });
+
         await this.setState({
           isFocused: true,
-          restaurant: this.props.navigation.getParam("data", false)
+          restaurant: this.props.restaurantJson
         });
 
         this.checkData();
@@ -173,7 +185,7 @@ class DetailView extends Component {
           style={{ flex: 1, height: 200, width: null }}
         />
 
-        <Icon
+        <IconElements
           reverse
           name={this.props.favorite ? "star" : "star-o"}
           type="font-awesome"
@@ -536,6 +548,26 @@ class DetailView extends Component {
             </Content>
           ) : null}
         </View>
+        <View
+          style={{
+            position: "absolute",
+            alignItems: "center",
+            justifyContent: "center",
+            right: 10,
+            bottom: 10
+          }}
+        >
+          <Button
+            iconLeft
+            rounded
+            onPress={() => {
+              console.log(this.props.restaurantJson);
+            }}
+          >
+            <Icon type="FontAwesome" name="cutlery" />
+            <Text>RESERVAR</Text>
+          </Button>
+        </View>
       </View>
     );
   }
@@ -544,6 +576,7 @@ class DetailView extends Component {
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
+    restaurantJson: state.mainReducer.restaurantJson,
     loading_bar: state.mainReducer.loading,
     favorite: state.mainReducer.favorite
   };

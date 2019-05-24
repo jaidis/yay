@@ -25,7 +25,12 @@ import {
 import ResponsiveImage from "react-native-responsive-image";
 // import Icon from "react-native-vector-icons";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { addText, loadingTrue, loadingFalse } from "../../store/actions/index";
+import {
+  addText,
+  loadingTrue,
+  loadingFalse,
+  addRestaurant
+} from "../../store/actions/index";
 import { connect } from "react-redux";
 
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
@@ -118,11 +123,10 @@ class Home extends Component {
                     >
                       <H3
                         style={HomeStyles.swiper_text}
-                        onPress={() => {
+                        onPress={async () => {
                           console.log("Promoted ID: ", promoted.id);
-                          this.props.navigation.navigate("DetailView", {
-                            data: restaurante
-                          });
+                          await this.props.c_addRestaurant(restaurante);
+                          this.props.navigation.navigate("DetailView");
                         }}
                       >
                         {promoted.name}
@@ -147,10 +151,9 @@ class Home extends Component {
                       <CardItem
                         cardBody
                         button
-                        onPress={() => {
-                          this.props.navigation.navigate("DetailView", {
-                            data: restaurante
-                          });
+                        onPress={async () => {
+                          await this.props.c_addRestaurant(restaurante);
+                          this.props.navigation.navigate("DetailView");
                         }}
                       >
                         <Image
@@ -237,7 +240,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addKeyValueJSON: (key, value) => dispatch(addText(key, value)),
     h_loadingTrue: () => dispatch(loadingTrue()),
-    h_loadingFalse: () => dispatch(loadingFalse())
+    h_loadingFalse: () => dispatch(loadingFalse()),
+    c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON))
   };
 };
 

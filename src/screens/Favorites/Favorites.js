@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Image, ScrollView } from "react-native";
 import { connect } from "react-redux";
-import { favoriteTrue, favoriteFalse } from "../../store/actions/index";
+import { loadingTrue, loadingFalse, favoriteTrue, favoriteFalse, addRestaurant } from "../../store/actions/index";
 import restaurante from "../../../restaurante.json";
 
 import { Icon } from "react-native-elements";
@@ -28,7 +28,7 @@ class Favorites extends Component {
    * @description COMPONENT DO SOMETHING (CUSTOM FUNCTION, NOT IMPLEMENTED AT REACT NATIVE)
    */
   async componentDoSomething() {
-    this.props.c_favoriteTrue();
+    // this.props.c_favoriteTrue();
     try {
       this.props.appJson.userdata.favorites.length > 0
         ? this.setState({ count_favorites: true })
@@ -79,11 +79,10 @@ class Favorites extends Component {
                 <CardItem
                   cardBody
                   button
-                  onPress={() => {
+                  onPress={async () => {
                     this.props.c_favoriteTrue();
-                    this.props.navigation.navigate("DetailView", {
-                      data: restaurante
-                    });
+                    await this.props.c_addRestaurant(restaurante);
+                    this.props.navigation.navigate("DetailView");
                   }}
                 >
                   <Image
@@ -157,8 +156,11 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
   return {
+    c_loadingTrue:() => dispatch(loadingTrue()),
+    c_loadingFalse:() => dispatch(loadingFalse()),
     c_favoriteTrue: () => dispatch(favoriteTrue()),
-    c_favoriteFalse: () => dispatch(favoriteFalse())
+    c_favoriteFalse: () => dispatch(favoriteFalse()),
+    c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON))
   };
 };
 

@@ -239,8 +239,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addKeyValueJSON: (key, value) => dispatch(addText(key, value)),
-    h_loadingTrue: () => dispatch(loadingTrue()),
-    h_loadingFalse: () => dispatch(loadingFalse()),
+    c_loadingTrue: () => dispatch(loadingTrue()),
+    c_loadingFalse: () => dispatch(loadingFalse()),
     c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON))
   };
 };

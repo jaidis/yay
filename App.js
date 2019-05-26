@@ -15,10 +15,10 @@ import SignUp from "./src/screens/SignUp/SignUp";
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
 import Home from "./src/screens/Home/Home";
 import Profile from "./src/screens/Profile/Profile";
+import Payments from './src/screens/Payments/Payments'
 import Favorites from "./src/screens/Favorites/Favorites";
 import DetailView from "./src/screens/DetailView/DetailView";
-import TabFirst from "./src/screens/TabFirst/TabFirst";
-import TabSecond from "./src/screens/TabSecond/TabSecond";
+import MyBase from './src/screens/MyBase/MyBase'
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
 import {
@@ -84,10 +84,11 @@ const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
     DetailView: DetailView,
-    ProfileNavigator: ProfileStackNavigator,
+    Profile: Profile,
+    Payments: Payments,
+    Reservations: MyBase,
     FavoritesNavigator: FavoritesStackNavigator,
-    TabFirst: TabFirst,
-    TabSecond: TabSecond
+    Categories: MyBase
   },
   {
     contentComponent: DrawerNavigator

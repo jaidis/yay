@@ -252,7 +252,7 @@ class Profile extends Component {
   render() {
     return (
       <View style={ProfileStyles.container}>
-        {NaviteBaseMenu.menuGoHome(this, "Profile")}
+        {NaviteBaseMenu.menuGoBack(this, "Profile")}
         <KeyboardAwareScrollView style={ProfileStyles.container}>
           <View style={ProfileStyles.view_form}>
             <View>

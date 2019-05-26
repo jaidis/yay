@@ -19,9 +19,39 @@ class MyBase extends Component {
     appJson: ""
   };
 
+  /**
+   * COMPONENT DID MOUNT
+   * @description Acciones cuando se carga el componente
+   */
+  async componentDidMount() {
+    //Do Something
+
+    this.subs = [
+      this.props.navigation.addListener("willFocus", async () => {
+        console.log("inicio");
+        //Do Something
+      }),
+      this.props.navigation.addListener("willBlur", async () => {
+        console.log("me voy");
+        //Do Something
+      })
+    ];
+  }
+
+  /**
+   * COMPONENT WILL UNMOUNT
+   * @description Acciones cuando se desmonta el componente
+   */
+  componentWillUnmount() {
+    this.subs.forEach(sub => sub.remove());
+    console.log("Desmontado");
+    //Do Something
+  }
+
   render() {
     return (
       <View style={MyBaseStyles.container}>
+        {NaviteBaseMenu.menuGoBack(this, "MyBase")}
         <Text>MyBase Screen!</Text>
         {/* <Text>{this.props.appJson}</Text> */}
 

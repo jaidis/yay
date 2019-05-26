@@ -100,7 +100,7 @@ class DrawerNavigator extends Component {
           <ListItem
             icon
             button
-            onPress={() => this.props.navigation.navigate("TabSecond")}
+            onPress={() => this.props.navigation.navigate("Reservations")}
           >
             <Left>
               <Button style={{ backgroundColor: "#2E3448" }}>

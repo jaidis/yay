@@ -46,7 +46,9 @@ class Profile extends Component {
     password: "", // La contraseña del usuario
     password_error: false, // Se marca si la contraseña no es válida
     password_copy: "", // La contraseña del usuario
-    password_copy_error: false // Se marca si la contraseña no es válida
+    password_copy_error: false, // Se marca si la contraseña no es válida
+    update_data_loading: false,
+    update_password_loading: false
   };
 
   checkData() {
@@ -87,6 +89,17 @@ class Profile extends Component {
       }),
       this.props.navigation.addListener("willBlur", async () => {
         console.log("me voy");
+        this.setState({
+          nombre_error: false,
+          apellidos_error: false,
+          telefono_error: false,
+          email_error: false,
+          old_password_error: false,
+          password_error: false,
+          password_copy_error: false,
+          update_data_loading: false,
+          update_password_loading: false
+        });
       })
     ];
   }
@@ -152,6 +165,7 @@ class Profile extends Component {
   updateDataConfirmation = () => {
     // VARIABLE DE CONTROL DE VERIFICACIÓN
     let error = false;
+    this.setState({ update_data_loading: true });
 
     // VALIDACIÓN DEL NOMBRE
     if (this.state.nombre == "") {
@@ -176,7 +190,7 @@ class Profile extends Component {
     if (!error) {
       this.updateDataAsync();
     } else {
-      this.setState({ loading_process_bar: false });
+      this.setState({ update_data_loading: false });
     }
   };
 
@@ -191,9 +205,11 @@ class Profile extends Component {
    * al menos 7 caracteres y sean iguales
    * Cuando todo se valida se envía a "changePassword()"
    */
-  newPasswordDataConfirmation() {
+  newPasswordDataConfirmation = () => {
     // VARIABLE DE CONTROL DE VERIFICACIÓN
     let error = false;
+
+    this.setState({ update_password_loading: true });
 
     // VALIDACIÓN DE LA CONTRASEÑA ANTIGUA
     if (!Validar.validatePasswordWeak(this.state.old_password)) {
@@ -227,9 +243,9 @@ class Profile extends Component {
       // this.setState({ loading_process_bar: false });
       this.changePasswordAsync();
     } else {
-      this.setState({ loading_process_bar: false });
+      this.setState({ update_password_loading: false });
     }
-  }
+  };
 
   changePasswordAsync = async () => {};
 
@@ -340,9 +356,7 @@ class Profile extends Component {
             <View style={ProfileStyles.input_container_birthdate}>
               {this.state.fechaNacimiento != "" ? (
                 <View style={ProfileStyles.input_container_style_birthdate}>
-                  <View
-                    style={ProfileStyles.icon_birthdate}
-                  >
+                  <View style={ProfileStyles.icon_birthdate}>
                     <Icon
                       name="calendar"
                       type="simple-line-icon"
@@ -358,7 +372,7 @@ class Profile extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
-                    textStyle={ProfileStyles.input_style}
+                    textStyle={ProfileStyles.input_style_birthdate}
                     onDateChange={newDate => {
                       this.setBirthDate(newDate);
                     }}
@@ -512,7 +526,7 @@ class Profile extends Component {
             />
 
             <Button
-              loading={false}
+              loading={this.state.update_data_loading}
               title="UPDATE PROFILE"
               containerStyle={ProfileStyles.button_profile_container_style}
               buttonStyle={ProfileStyles.button_profile_style}
@@ -626,10 +640,10 @@ class Profile extends Component {
               blurOnSubmit={true}
             />
             <Button
-              loading={false}
+              loading={this.state.update_password_loading}
               title="UPDATE PASSWORD"
               containerStyle={ProfileStyles.button_profile_container_style}
-              buttonStyle={ProfileStyles.button_signup_style}
+              buttonStyle={ProfileStyles.button_profile_style}
               titleStyle={ProfileStyles.button_title_style}
               onPress={this.newPasswordDataConfirmation}
               disabled={false}

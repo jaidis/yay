@@ -9,5 +9,7 @@ export {
   favoriteTrue,
   favoriteFalse,
   addRestaurant,
-  deleteRestaurant
+  deleteRestaurant,
+  addCreditCard,
+  deleteCreditCard
 } from "./actions";

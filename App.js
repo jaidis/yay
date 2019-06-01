@@ -15,10 +15,11 @@ import SignUp from "./src/screens/SignUp/SignUp";
 // IMPORTAR LAS SCREEN DEL DRAWERNAVIGATOR
 import Home from "./src/screens/Home/Home";
 import Profile from "./src/screens/Profile/Profile";
-import Payments from './src/screens/Payments/Payments'
+import Payments from "./src/screens/Payments/Payments";
+import CreditCard from "./src/screens/CreditCard/CreditCard";
 import Favorites from "./src/screens/Favorites/Favorites";
 import DetailView from "./src/screens/DetailView/DetailView";
-import MyBase from './src/screens/MyBase/MyBase'
+import MyBase from "./src/screens/MyBase/MyBase";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
 import {
@@ -67,13 +68,14 @@ const FavoritesStackNavigator = createStackNavigator(
   }
 );
 
-const ProfileStackNavigator = createStackNavigator(
+const PaymentsStackNavigator = createStackNavigator(
   {
-    Profile: Profile,
+    Payments: Payments,
+    CreditCard: CreditCard
   },
   {
     headerMode: "none",
-    initialRouteName: "Profile",
+    initialRouteName: "Payments",
     defaultNavigationOptions: {
       headerVisible: false
     }
@@ -85,7 +87,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     Home: Home,
     DetailView: DetailView,
     Profile: Profile,
-    Payments: Payments,
+    PaymentsNavigator: PaymentsStackNavigator,
     Reservations: MyBase,
     FavoritesNavigator: FavoritesStackNavigator,
     Categories: MyBase

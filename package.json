@@ -6,10 +6,17 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "lint": "eslint .",
+    "ios": "react-native run-ios",
     "android": "react-native run-android",
-    "emulator": "emulator @Nexus5X"
+    "release": "cd android/ && ./gradlew assembleRelease",
+    "emulator": "emulator @Nexus5X",
+    "start_clean": "npm start -- --reset-cache",
+    "gradle_clean": "cd android/ && ./gradlew clean",
+    "cache_clean": "npm cache clean --force"
   },
   "dependencies": {
+    "@types/react-native": "^0.57.60",
+    "@types/react-redux": "^7.0.9",
     "native-base": "^2.12.1",
     "react": "16.8.6",
     "react-native": "0.59.8",
@@ -34,8 +41,8 @@
     "babel-jest": "24.5.0",
     "eslint": "5.15.3",
     "jest": "24.5.0",
-    "metro-react-native-babel-preset": "0.53.1",
-    "react-test-renderer": "16.8.3"
+    "metro-react-native-babel-preset": "0.54.1",
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"

@@ -1,4 +1,4 @@
-import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE, ADD_RESTAURANT, DELETE_RESTAURANT} from './actionTypes';
+import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE, ADD_RESTAURANT, DELETE_RESTAURANT, ADD_CREDIT_CARD, DELETE_CREDIT_CARD} from './actionTypes';
 
 export const addText = (new_key, add_Text) => {
   return {
@@ -67,5 +67,18 @@ export const addRestaurant = restaurant => {
 export const deleteRestaurant = () => {
   return {
     type: DELETE_RESTAURANT
+  };
+};
+
+export const addCreditCard = creditCard => {
+  return {
+    type: ADD_CREDIT_CARD,
+    creditCardJSON: creditCard
+  };
+};
+
+export const deleteCreditCard = () => {
+  return {
+    type: DELETE_CREDIT_CARD
   };
 };

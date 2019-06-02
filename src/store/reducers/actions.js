@@ -11,7 +11,9 @@ import {
   ADD_RESTAURANT,
   DELETE_RESTAURANT,
   ADD_CREDIT_CARD,
-  DELETE_CREDIT_CARD
+  DELETE_CREDIT_CARD,
+  ADD_CATEGORIES_LIST,
+  DELETE_CATEGORIES_LIST
 } from "../actions/actionTypes";
 import user from "../../../user.json";
 
@@ -50,6 +52,7 @@ const initialState = {
   appJson: user,
   restaurantJson: false,
   creditCardJSON: null,
+  categoriesListJSON: null,
   auth: false,
   favorite: false
 };
@@ -131,6 +134,18 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         creditCardJSON: null
+      };
+    }
+    case ADD_CATEGORIES_LIST: {
+      return {
+        ...state,
+        categoriesListJSON: action.categoriesListJSON
+      };
+    }
+    case DELETE_CATEGORIES_LIST: {
+      return {
+        ...state,
+        categoriesListJSON: null
       };
     }
     default:

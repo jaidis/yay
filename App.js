@@ -19,6 +19,8 @@ import Payments from "./src/screens/Payments/Payments";
 import CreditCard from "./src/screens/CreditCard/CreditCard";
 import Favorites from "./src/screens/Favorites/Favorites";
 import DetailView from "./src/screens/DetailView/DetailView";
+import Categories from "./src/screens/Categories/Categories";
+import CategoriesList from "./src/screens/CategoriesList/CategoriesList";
 import MyBase from "./src/screens/MyBase/MyBase";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
@@ -82,6 +84,21 @@ const PaymentsStackNavigator = createStackNavigator(
   }
 );
 
+const CategoriesStackNavigator = createStackNavigator(
+  {
+    Categories: Categories,
+    CategoriesList: CategoriesList,
+    DetailView: DetailView
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "Categories",
+    defaultNavigationOptions: {
+      headerVisible: false
+    }
+  }
+);
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
@@ -90,7 +107,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     PaymentsNavigator: PaymentsStackNavigator,
     Reservations: MyBase,
     FavoritesNavigator: FavoritesStackNavigator,
-    Categories: MyBase
+    CategoriesNavigator: CategoriesStackNavigator
   },
   {
     contentComponent: DrawerNavigator

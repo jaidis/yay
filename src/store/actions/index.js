@@ -11,5 +11,7 @@ export {
   addRestaurant,
   deleteRestaurant,
   addCreditCard,
-  deleteCreditCard
+  deleteCreditCard,
+  addCategoriesList,
+  deleteCategoriesList
 } from "./actions";

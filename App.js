@@ -30,15 +30,18 @@ import {
   createSwitchNavigator,
   createDrawerNavigator
 } from "react-navigation";
-// import { createStore, combineReducers } from 'redux';
-// import { Provider, connect } from 'react-redux';
+
+// Redux
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 // Configuration with Redux implemented
 import configureStore from "./src/store/configureStore";
 
-// Init the Store configuration
-const store = configureStore();
+// Init the Redux Store configuration
+let storeConfiguration = configureStore();
+const store = storeConfiguration.store;
+const persistor = storeConfiguration.persistor; 
 
 const AuthStackNavigator = createStackNavigator(
   {
@@ -134,7 +137,9 @@ class App extends Component<Props> {
   render() {
     return (
       <Provider store={store}>
-        <Navigation />
+        <PersistGate loading={null} persistor={persistor}>
+          <Navigation />
+        </PersistGate>
       </Provider>
     );
   }

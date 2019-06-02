@@ -15,6 +15,7 @@
     "cache_clean": "npm cache clean --force"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.4.2",
     "@types/react-native": "^0.57.60",
     "@types/react-redux": "^7.0.9",
     "native-base": "^2.12.1",

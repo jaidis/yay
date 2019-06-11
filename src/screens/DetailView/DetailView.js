@@ -422,8 +422,8 @@ class DetailView extends Component {
         <Grid>
           <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Text>
-              X: {this.state.restaurant.data.map.coordenateX} Y:{" "}
-              {this.state.restaurant.data.map.coordenateY}
+              X: {this.state.restaurant.data.coordenateX}
+              Y: {this.state.restaurant.data.coordenateY}
             </Text>
           </Row>
         </Grid>
@@ -463,7 +463,7 @@ class DetailView extends Component {
             return (
               <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
                 <Text>
-                  {item.key} {item.value}
+                  {item.name} {item.description}
                 </Text>
               </Row>
             );

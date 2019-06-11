@@ -184,11 +184,11 @@ class Home extends Component {
                             >
                               <Button
                                 onPress={() => {
-                                  console.log("Category Id: ", category.id);
+                                  console.log("Category Id: ", category.id_category);
                                 }}
                               >
                                 {/* <Icon active name="thumbs-up" /> */}
-                                <Text>{category.value}</Text>
+                                <Text>{category.name}</Text>
                               </Button>
                             </View>
                           );

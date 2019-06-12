@@ -6,7 +6,8 @@
  */
 
 import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+
+import AuthCheck from "./src/screens/AuthCheck/AuthCheck";
 
 // IMPORTAR LAS SCREENS DEL AUTHSTACKNAVIGATOR
 import SignIn from "./src/screens/SignIn/SignIn";
@@ -21,6 +22,7 @@ import Favorites from "./src/screens/Favorites/Favorites";
 import DetailView from "./src/screens/DetailView/DetailView";
 import Categories from "./src/screens/Categories/Categories";
 import CategoriesList from "./src/screens/CategoriesList/CategoriesList";
+import Bookings from "./src/screens/Bookings/Bookings";
 import MyBase from "./src/screens/MyBase/MyBase";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
@@ -41,7 +43,7 @@ import configureStore from "./src/store/configureStore";
 // Init the Redux Store configuration
 let storeConfiguration = configureStore();
 const store = storeConfiguration.store;
-const persistor = storeConfiguration.persistor; 
+const persistor = storeConfiguration.persistor;
 
 const AuthStackNavigator = createStackNavigator(
   {
@@ -108,7 +110,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     DetailView: DetailView,
     Profile: Profile,
     PaymentsNavigator: PaymentsStackNavigator,
-    Reservations: MyBase,
+    Bookings: Bookings,
     FavoritesNavigator: FavoritesStackNavigator,
     CategoriesNavigator: CategoriesStackNavigator
   },
@@ -121,10 +123,11 @@ const AppDrawerNavigator = createDrawerNavigator(
 let RootStack = createSwitchNavigator(
   {
     AuthStack: AuthStackNavigator,
-    AppDrawer: AppDrawerNavigator
+    AppDrawer: AppDrawerNavigator,
+    AuthCheck: AuthCheck
   },
   {
-    initialRouteName: "AuthStack"
+    initialRouteName: "AuthCheck"
   }
 );
 

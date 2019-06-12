@@ -25,6 +25,7 @@ import {
 import ResponsiveImage from "react-native-responsive-image";
 // import Icon from "react-native-vector-icons";
 import { Col, Row, Grid } from "react-native-easy-grid";
+
 import {
   addText,
   loadingTrue,
@@ -33,11 +34,12 @@ import {
 } from "../../store/actions/index";
 import { connect } from "react-redux";
 
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import Swiper from "react-native-swiper";
 
-import restaurante from "../../../restaurante";
-import restaurante2 from "../../../restaurante2";
+// import restaurante from "../../../restaurante";
 
 import HomeStyles from "./HomeStyles";
 
@@ -126,7 +128,14 @@ class Home extends Component {
                         style={HomeStyles.swiper_text}
                         onPress={async () => {
                           console.log("Promoted ID: ", promoted.id);
-                          await this.props.c_addRestaurant(restaurante);
+                          restaurantJSON = { id_restaurant: promoted.id };
+
+                          let response = await YAY_Api.fetchInternetDataAsync(
+                            AppConsts.URL_RESTAURANT,
+                            await YAY_Api.getRequestPostAsync(restaurantJSON)
+                          );
+
+                          await this.props.c_addRestaurant(response);
                           this.props.navigation.navigate("DetailView");
                         }}
                       >
@@ -153,7 +162,14 @@ class Home extends Component {
                         cardBody
                         button
                         onPress={async () => {
-                          await this.props.c_addRestaurant(restaurante);
+                          restaurantJSON = { id_restaurant: nearby.id };
+
+                          let response = await YAY_Api.fetchInternetDataAsync(
+                            AppConsts.URL_RESTAURANT,
+                            await YAY_Api.getRequestPostAsync(restaurantJSON)
+                          );
+
+                          await this.props.c_addRestaurant(response);
                           this.props.navigation.navigate("DetailView");
                         }}
                       >
@@ -184,7 +200,10 @@ class Home extends Component {
                             >
                               <Button
                                 onPress={() => {
-                                  console.log("Category Id: ", category.id_category);
+                                  console.log(
+                                    "Category Id: ",
+                                    category.id_category
+                                  );
                                 }}
                               >
                                 {/* <Icon active name="thumbs-up" /> */}

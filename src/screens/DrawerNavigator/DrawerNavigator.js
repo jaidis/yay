@@ -1,15 +1,11 @@
 import React, { Component } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  Image,
-  ImageBackground,
-  AsyncStorage
-} from "react-native";
+import { SafeAreaView, ScrollView, Image, ImageBackground } from "react-native";
 import { connect } from "react-redux";
-
-// REACT NAVIGATION
-import { createStackNavigator, createDrawerNavigator } from "react-navigation";
+import {
+  loadingTrue,
+  loadingFalse,
+  deleteUser
+} from "../../store/actions/index";
 
 // IMPORTAR LOS COMPONENTES DE NATIVE BASE
 import {
@@ -60,7 +56,8 @@ class DrawerNavigator extends Component {
             />
             <Text style={DrawerNavigatorStyles.background_text}>
               {/* {this.state.user ? this.state.user.attributes.email : null} */}
-              micorreo@gmail.com
+              {/* micorreo@gmail.com */}
+              {this.props.appJson.userdata.user.email}
             </Text>
           </ImageBackground>
           <ListItem
@@ -76,9 +73,6 @@ class DrawerNavigator extends Component {
             <Body>
               <Text>Mis datos</Text>
             </Body>
-            {/* <Right>
-              <Text>1</Text>
-            </Right> */}
           </ListItem>
           <ListItem
             icon
@@ -93,14 +87,11 @@ class DrawerNavigator extends Component {
             <Body>
               <Text>Formas de pago</Text>
             </Body>
-            {/* <Right>
-              <Text>1</Text>
-            </Right> */}
           </ListItem>
           <ListItem
             icon
             button
-            onPress={() => this.props.navigation.navigate("Reservations")}
+            onPress={() => this.props.navigation.navigate("Bookings")}
           >
             <Left>
               <Button style={{ backgroundColor: "#2E3448" }}>
@@ -110,7 +101,7 @@ class DrawerNavigator extends Component {
             <Body>
               <Text>Reservas</Text>
             </Body>
-            <Right>{/* <Icon active name="arrow-forward" /> */}</Right>
+            {/* <Right> <Icon active name="arrow-forward" /> </Right> */}
           </ListItem>
           <ListItem
             icon
@@ -156,6 +147,9 @@ class DrawerNavigator extends Component {
             button
             onPress={() => {
               this.props.navigation.navigate("SignIn");
+              setTimeout(()=>{
+                this.props.c_deleteUser();
+              },300);
             }}
           >
             <Left>
@@ -167,16 +161,6 @@ class DrawerNavigator extends Component {
               <Text>Cerrar sesión</Text>
             </Body>
           </ListItem>
-          {/* <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#2E3448" }}>
-                <Icon type="FontAwesome" name="info-circle" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Valor de Loading: {this.props.loading_bar?"True":"False"}</Text>
-            </Body>
-          </ListItem> */}
         </Content>
       </Container>
     );
@@ -192,9 +176,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // dispatching plain actions
-    loadingTrue: () => dispatch({ type: "LOADING_TRUE" }),
-    loadingFalse: () => dispatch({ type: "LOADING_FALSE" })
+    c_loadingTrue: () => dispatch(loadingTrue()),
+    c_loadingFalse: () => dispatch(loadingFalse()),
+    c_deleteUser: () => dispatch(deleteUser())
   };
 };
 
@@ -202,21 +186,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(DrawerNavigator);
-
-// const TestStackNavigator = createStackNavigator(
-//   {
-//     TabFirst: TabFirst,
-//     TabSecond: TabSecond
-//   },
-//   {
-//     headerMode: 'none',
-//     initialRouteName: "TabFirst",
-//     defaultNavigationOptions: {
-//       // headerTintColor: '#fff',
-//       // headerStyle: {
-//       //   backgroundColor: "rgba(46, 50, 72, 1)",
-//       // },
-//       headerVisible: false,
-//     },
-//   }
-// );

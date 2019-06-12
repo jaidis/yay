@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, Dimensions } from "react-native";
 import { connect } from "react-redux";
-import {
-  loadingTrue,
-  loadingFalse,
-  addUser,
-  deleteUser
-} from "../../store/actions/index";
+import { loadingTrue, loadingFalse, addUser } from "../../store/actions/index";
 
 import {
   Input,

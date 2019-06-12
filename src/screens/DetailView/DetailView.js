@@ -78,8 +78,10 @@ class DetailView extends Component {
         ? (t_descripcion = true)
         : (t_descripcion = false);
 
-      this.state.restaurant.data.map != undefined &&
-      this.state.restaurant.data.map != false
+      this.state.restaurant.data.coordenateX != undefined &&
+      this.state.restaurant.data.coordenateY != undefined &&
+      this.state.restaurant.data.coordenateX != false &&
+      this.state.restaurant.data.coordenateY != false
         ? (t_mapa = true)
         : (t_mapa = false);
 

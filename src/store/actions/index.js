@@ -8,6 +8,8 @@ export {
   loadingFalse, 
   favoriteTrue,
   favoriteFalse,
+  addUser,
+  deleteUser,
   addRestaurant,
   deleteRestaurant,
   addCreditCard,

@@ -8,6 +8,8 @@ import {
   LOADING_FALSE,
   FAVORITE_TRUE,
   FAVORITE_FALSE,
+  ADD_USER,
+  DELETE_USER,
   ADD_RESTAURANT,
   DELETE_RESTAURANT,
   ADD_CREDIT_CARD,
@@ -17,31 +19,31 @@ import {
 } from "../actions/actionTypes";
 import user from "../../../user.json";
 
-const add_text_to_json = (json, key, value) => {
-  /**
-   *  Add new key value to JSON Object
-   */
-  let tempJson = JSON.parse(json);
-  if (tempJson !== null) {
-    tempJson[key] = value;
-  } else {
-    tempJson = {};
-    tempJson[key] = value;
-  }
-  console.log(JSON.stringify(tempJson));
-  return JSON.stringify(tempJson);
-};
+// const add_text_to_json = (json, key, value) => {
+//   /**
+//    *  Add new key value to JSON Object
+//    */
+//   let tempJson = JSON.parse(json);
+//   if (tempJson !== null) {
+//     tempJson[key] = value;
+//   } else {
+//     tempJson = {};
+//     tempJson[key] = value;
+//   }
+//   console.log(JSON.stringify(tempJson));
+//   return JSON.stringify(tempJson);
+// };
 
-const delete_text_to_json = (json, key) => {
-  /**
-   *  Delete key-value at JSON Object
-   */
-  let tempJson = JSON.parse(json);
-  if (tempJson !== null) {
-    delete tempJson[key];
-  }
-  return JSON.stringify(tempJson);
-};
+// const delete_text_to_json = (json, key) => {
+//   /**
+//    *  Delete key-value at JSON Object
+//    */
+//   let tempJson = JSON.parse(json);
+//   if (tempJson !== null) {
+//     delete tempJson[key];
+//   }
+//   return JSON.stringify(tempJson);
+// };
 
 // const initialState = {
 //   appJson: null,
@@ -49,8 +51,8 @@ const delete_text_to_json = (json, key) => {
 
 const initialState = {
   loading: false,
-  appJson: user,
-  restaurantJson: false,
+  appJson: null,
+  restaurantJson: null,
   creditCardJSON: null,
   categoriesListJSON: null,
   auth: false,
@@ -59,20 +61,20 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_TEXT_JSON:
-      return {
-        ...state,
-        appJson: add_text_to_json(
-          state.appJson,
-          action.keyToAdd,
-          action.textToAdd
-        )
-      };
-    case DELETE_TEXT_JSON:
-      return {
-        ...state,
-        appJson: delete_text_to_json(state.appJson, action.keyToDelete)
-      };
+    // case ADD_TEXT_JSON:
+    //   return {
+    //     ...state,
+    //     appJson: add_text_to_json(
+    //       state.appJson,
+    //       action.keyToAdd,
+    //       action.textToAdd
+    //     )
+    //   };
+    // case DELETE_TEXT_JSON:
+    //   return {
+    //     ...state,
+    //     appJson: delete_text_to_json(state.appJson, action.keyToDelete)
+    //   };
     case AUTH_CHECK:
       return {
         ...state,
@@ -110,6 +112,18 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         favorite: false
+      };
+    }
+    case ADD_USER: {
+      return {
+        ...state,
+        appJson: action.userJSON
+      };
+    }
+    case DELETE_USER: {
+      return {
+        ...state,
+        appJson: null
       };
     }
     case ADD_RESTAURANT: {

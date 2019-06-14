@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import { addUser, deleteUser } from "../../store/actions/index";
 
@@ -18,15 +19,26 @@ class AuthCheck extends Component {
 
   async componentDidMount() {
     if (this.props.appJson != null) {
-      AuthCheckJSON = {
-        token: this.props.appJson.userdata.token
-      };
-      let response = await YAY_Api.fetchInternetDataAsync(
-        AppConsts.URL_USER_REFRESH,
-        await YAY_Api.getRequestPostAsync(AuthCheckJSON)
-      );
-      this.props.c_addUser(response);
-      this.props.navigation.navigate("Home");
+      NetInfo.isConnected
+        .fetch()
+        .then(async isConnected => {
+          if (isConnected) {
+            AuthCheckJSON = {
+              token: this.props.appJson.userdata.token
+            };
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_USER_REFRESH,
+              await YAY_Api.getRequestPostAsync(AuthCheckJSON)
+            );
+            this.props.c_addUser(response);
+            this.props.navigation.navigate("Home");
+          } else {
+            this.props.navigation.navigate("Home");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } else {
       this.props.navigation.navigate("SignIn");
     }

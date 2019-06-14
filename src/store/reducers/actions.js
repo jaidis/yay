@@ -15,7 +15,11 @@ import {
   ADD_CREDIT_CARD,
   DELETE_CREDIT_CARD,
   ADD_CATEGORIES_LIST,
-  DELETE_CATEGORIES_LIST
+  DELETE_CATEGORIES_LIST,
+  ADD_BOOKINGS,
+  DELETE_BOOKINGS,
+  ADD_RESERVA,
+  DELETE_RESERVA
 } from "../actions/actionTypes";
 import user from "../../../user.json";
 
@@ -52,9 +56,11 @@ import user from "../../../user.json";
 const initialState = {
   loading: false,
   appJson: null,
+  reservaJSON: null,
   restaurantJson: null,
   creditCardJSON: null,
   categoriesListJSON: null,
+  bookingsJSON: null,
   auth: false,
   favorite: false
 };
@@ -160,6 +166,30 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         categoriesListJSON: null
+      };
+    }
+    case ADD_BOOKINGS: {
+      return {
+        ...state,
+        bookingsJSON: action.bookingsJSON
+      };
+    }
+    case DELETE_BOOKINGS: {
+      return {
+        ...state,
+        bookingsJSON: null
+      };
+    }
+    case ADD_RESERVA: {
+      return {
+        ...state,
+        reservaJSON: action.reservaJSON
+      };
+    }
+    case DELETE_RESERVA: {
+      return {
+        ...state,
+        reservaJSON: null
       };
     }
     default:

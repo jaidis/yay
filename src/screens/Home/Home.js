@@ -185,7 +185,7 @@ class Home extends Component {
                       </CardItem>
                       <CardItem cardBody>
                         <Left>
-                          <Text>Precio medio: {nearby.price} €</Text>
+                          <Text>Precio medio: {nearby.price}€</Text>
                         </Left>
                         <Right style={HomeStyles.nearby_right}>
                           <Text>Puntuación: {nearby.score}</Text>

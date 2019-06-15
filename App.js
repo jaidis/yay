@@ -23,6 +23,7 @@ import DetailView from "./src/screens/DetailView/DetailView";
 import Categories from "./src/screens/Categories/Categories";
 import CategoriesList from "./src/screens/CategoriesList/CategoriesList";
 import Bookings from "./src/screens/Bookings/Bookings";
+import Reserve from "./src/screens/Reserve/Reserve";
 import MyBase from "./src/screens/MyBase/MyBase";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
@@ -61,9 +62,23 @@ const AuthStackNavigator = createStackNavigator(
   }
 );
 
-const FavoritesStackNavigator = createStackNavigator(
+const DetailViewStackNavigator = createStackNavigator(
   {
     DetailView: DetailView,
+    Reserve: Reserve
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "DetailView",
+    defaultNavigationOptions: {
+      headerVisible: false
+    }
+  }
+);
+
+const FavoritesStackNavigator = createStackNavigator(
+  {
+    DetailViewNavigator: DetailViewStackNavigator,
     Favorites: Favorites
   },
   {
@@ -93,7 +108,7 @@ const CategoriesStackNavigator = createStackNavigator(
   {
     Categories: Categories,
     CategoriesList: CategoriesList,
-    DetailView: DetailView
+    DetailViewNavigator: DetailViewStackNavigator
   },
   {
     headerMode: "none",
@@ -104,13 +119,27 @@ const CategoriesStackNavigator = createStackNavigator(
   }
 );
 
+const BookingsStackNavigator = createStackNavigator(
+  {
+    Bookings: Bookings,
+    Reserve: Reserve
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "Bookings",
+    defaultNavigationOptions: {
+      headerVisible: false
+    }
+  }
+);
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
-    DetailView: DetailView,
+    DetailViewNavigator: DetailViewStackNavigator,
     Profile: Profile,
     PaymentsNavigator: PaymentsStackNavigator,
-    Bookings: Bookings,
+    BookingsNavigator: BookingsStackNavigator,
     FavoritesNavigator: FavoritesStackNavigator,
     CategoriesNavigator: CategoriesStackNavigator
   },

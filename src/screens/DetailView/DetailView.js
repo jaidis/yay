@@ -221,16 +221,6 @@ class DetailView extends Component {
         <Grid>
           {this.state.restaurant.data.entrees.map((value, index) => {
             return (
-              // <CardItem key={index}>
-              //   <Grid>
-              //     <Col size={90}>
-              //       <Text>{value.name}</Text>
-              //     </Col>
-              //     <Col size={10}>
-              //       <Text>{value.price}€</Text>
-              //     </Col>
-              //   </Grid>
-              // </CardItem>
               <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
                 <Grid>
                   <Col size={80}>
@@ -509,7 +499,6 @@ class DetailView extends Component {
             ? this.state.restaurant.data.name
             : "DetailView"
         )}
-        {/* <Text>DetailViewScreen!</Text> */}
         <View style={{ flex: 1, margin: 20 }}>
           {this.state.isFocused ? (
             <Content>
@@ -564,6 +553,7 @@ class DetailView extends Component {
             rounded
             onPress={() => {
               console.log(this.props.restaurantJson);
+              this.props.navigation.navigate("Reserve");
             }}
           >
             <Icon type="FontAwesome" name="cutlery" />

@@ -90,14 +90,14 @@ export function menuTitulo(clasePadre, titulo="Yay!") {
  * @param {*} clasePadre
  * @param {*} titulo
  */
-export function menuGoBack(clasePadre, titulo = "OpenPark") {
+export function menuGoBack(clasePadre, titulo = "Yay!") {
   return (
     <StyleProvider style={getTheme(platform)}>
       <Header>
         <Left>
           <Button
             transparent
-            onPress={() => clasePadre.props.navigation.goBack()}
+            onPress={() => clasePadre.props.navigation.goBack(null)}
           >
             <Icon name="arrow-back" />
           </Button>

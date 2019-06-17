@@ -8,7 +8,8 @@ Yay, tu aplicación para reservar en tus restaurantes favoritos
 
 La aplicación esta compuesta por los siguientes elementos:
 
-- React Native 0.59.8
+- React 16.8.6
+- React Native 0.59.9
 - React Redux 6.0.1
 - Redux 4.0.1
 - Redux Persist 5.10.0
@@ -25,3 +26,6 @@ La aplicación esta compuesta por los siguientes elementos:
 - React Native Credit Card Input 0.4.1
 - React Native Async Storage 1.4.2
 - React Native DatePicker 1.7.2
+- React Native Localize 1.1.3
+- i18n-js 3.3.0
+- lodash.memoize 4.1.2

@@ -42,6 +42,11 @@ import { PersistGate } from "redux-persist/integration/react";
 // Configuration with Redux implemented
 import configureStore from "./src/store/configureStore";
 
+// Cargar libreria i18n
+import * as RNLocalize from "react-native-localize";
+import { setI18nConfig } from "./languages/i18n";
+let i18n = setI18nConfig();
+
 // Init the Redux Store configuration
 let storeConfiguration = configureStore();
 const store = storeConfiguration.store;
@@ -181,6 +186,19 @@ let Navigation = createAppContainer(RootStack);
 type Props = {};
 
 class App extends Component<Props> {
+  componentDidMount() {
+    RNLocalize.addEventListener("change", this.handleLocalizationChange);
+  }
+
+  componentWillUnmount() {
+    RNLocalize.removeEventListener("change", this.handleLocalizationChange);
+  }
+
+  handleLocalizationChange = () => {
+    i18n = setI18nConfig();
+    this.forceUpdate();
+  };
+
   render() {
     return (
       <Provider store={store}>

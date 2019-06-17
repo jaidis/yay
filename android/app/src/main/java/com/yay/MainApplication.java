@@ -3,6 +3,7 @@ package com.yay;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNLocalizePackage(),
             new NetInfoPackage(),
             new AsyncStoragePackage(),
             new RNDeviceInfo(),

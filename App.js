@@ -24,6 +24,7 @@ import Categories from "./src/screens/Categories/Categories";
 import CategoriesList from "./src/screens/CategoriesList/CategoriesList";
 import Bookings from "./src/screens/Bookings/Bookings";
 import Reserve from "./src/screens/Reserve/Reserve";
+import ReserveConfirmed from "./src/screens/ReserveConfirmed/ReserveConfirmed";
 import MyBase from "./src/screens/MyBase/MyBase";
 import DrawerNavigator from "./src/screens/DrawerNavigator/DrawerNavigator";
 
@@ -133,6 +134,19 @@ const BookingsStackNavigator = createStackNavigator(
   }
 );
 
+const ReserveStackNavigator = createStackNavigator(
+  {
+    ReserveConfirmed: ReserveConfirmed
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "ReserveConfirmed",
+    defaultNavigationOptions: {
+      headerVisible: false
+    }
+  }
+);
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: Home,
@@ -141,7 +155,8 @@ const AppDrawerNavigator = createDrawerNavigator(
     PaymentsNavigator: PaymentsStackNavigator,
     BookingsNavigator: BookingsStackNavigator,
     FavoritesNavigator: FavoritesStackNavigator,
-    CategoriesNavigator: CategoriesStackNavigator
+    CategoriesNavigator: CategoriesStackNavigator,
+    ReserveNavigator: ReserveStackNavigator
   },
   {
     contentComponent: DrawerNavigator

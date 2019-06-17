@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { View, Text, Dimensions } from "react-native";
 import { connect } from "react-redux";
-import { loadingTrue, loadingFalse, addUser } from "../../store/actions/index";
+import {
+  loadingTrue,
+  loadingFalse,
+  addUser,
+  addBookings
+} from "../../store/actions/index";
 
 import {
   Input,
@@ -81,6 +86,13 @@ class SignIn extends Component {
     this.props.c_addUser(response);
     this.setState({ loading_sign_in: false });
     this.props.navigation.navigate("Home");
+
+    bookingJSON = { token: this.props.appJson.userdata.token };
+    response = await YAY_Api.fetchInternetDataAsync(
+      AppConsts.URL_BOOKINGS_SEARCH,
+      await YAY_Api.getRequestPostAsync(bookingJSON)
+    );
+    this.props.c_addBookings(response);
   };
 
   render() {
@@ -196,7 +208,8 @@ const mapDispatchToProps = dispatch => {
   return {
     c_loadingTrue: () => dispatch(loadingTrue()),
     c_loadingFalse: () => dispatch(loadingFalse()),
-    c_addUser: userJSON => dispatch(addUser(userJSON))
+    c_addUser: userJSON => dispatch(addUser(userJSON)),
+    c_addBookings: reservaJSON => dispatch(addBookings(reservaJSON))
   };
 };
 

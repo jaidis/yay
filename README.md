@@ -24,3 +24,4 @@ La aplicación esta compuesta por los siguientes elementos:
 - React Native Super Grid 3.0.4
 - React Native Credit Card Input 0.4.1
 - React Native Async Storage 1.4.2
+- React Native DatePicker 1.7.2

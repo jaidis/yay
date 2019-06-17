@@ -3,8 +3,8 @@
  */
 
 import React from "react";
-import { Dimensions } from "react-native";
-import { Image } from 'react-native-elements';
+import { Dimensions, Platform } from "react-native";
+import { Image } from "react-native-elements";
 
 // Importar componentes de NativeBase
 import {
@@ -48,9 +48,13 @@ export function menuLogo(clasePadre) {
         </Left>
         <Body style={{ flex: 1, alignItems: "center" }}>
           <ResponsiveImage
-            source={require("../../assets/img/yay-transparente.png")}
-            initWidth={SCREEN_WIDTH * 0.2}
-            initHeight={SCREEN_HEIGHT * 0.1}
+            source={
+              Platform.OS === "ios"
+                ? require("../../assets/img/yay-logo-black.png")
+                : require("../../assets/img/yay-logo-white.png")
+            }
+            initWidth={SCREEN_WIDTH * 0.3}
+            initHeight={SCREEN_HEIGHT * 0.07}
           />
         </Body>
         <Right style={{ flex: 1 }} />
@@ -64,7 +68,7 @@ export function menuLogo(clasePadre) {
  * @param {*} clasePadre
  * @param {*} titulo
  */
-export function menuTitulo(clasePadre, titulo="Yay!") {
+export function menuTitulo(clasePadre, titulo = "Yay!") {
   return (
     <StyleProvider style={getTheme(platform)}>
       <Header>
@@ -110,7 +114,6 @@ export function menuGoBack(clasePadre, titulo = "Yay!") {
     </StyleProvider>
   );
 }
-
 
 /**
  * @description Esta función devuelve la barra superior de navegación con el icono de volver atrás, es necesario pasar la clase padre y el titulo que se desea mostrar

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Alert, Text, Dimensions } from "react-native";
+import { View, Alert, Text} from "react-native";
 import { connect } from "react-redux";
 
 import {
@@ -19,11 +19,9 @@ import * as Validar from "../../functions/Validate_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-
 class SignUp extends Component {
   static navigationOptions = {
-    title: "SignUp"
+    title: ""
   };
 
   state = {
@@ -156,7 +154,7 @@ class SignUp extends Component {
         </Text> */}
           <View style={SignUpStyles.logo}>
             <ResponsiveImage
-              source={require("../../../assets/img/yay-transparente.png")}
+              source={require("../../../assets/img/yay-logo-rounded.png")}
               initWidth="200"
               initHeight="200"
             />

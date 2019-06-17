@@ -198,7 +198,7 @@ class Home extends Component {
                               style={HomeStyles.nearby_categories_view}
                               key={index}
                             >
-                              <Button
+                              <Button small bordered
                                 onPress={() => {
                                   console.log(
                                     "Category Id: ",
@@ -231,15 +231,15 @@ class Home extends Component {
   render() {
     return (
       <View style={HomeStyles.container}>
-        {/* {NaviteBaseMenu.menuLogo(this)} */}
+        {NaviteBaseMenu.menuLogo(this)}
 
-        <SearchBar
+        {/* <SearchBar
           placeholder="Type Here..."
           onChangeText={this.updateSearch}
           value={this.state.search}
           showLoading={this.state.searchLoading}
           // platform={"ios"}
-        />
+        /> */}
 
         <ScrollView>
           {this.state.load_content ? this.loadContent() : null}

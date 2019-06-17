@@ -62,7 +62,7 @@ class AuthCheck extends Component {
         }}
       >
         <ResponsiveImage
-          source={require("../../../assets/img/yay-transparente.png")}
+          source={require("../../../assets/img/yay-logo-rounded.png")}
           initWidth="200"
           initHeight="200"
         />

@@ -29,7 +29,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
  */
 class SignIn extends Component {
   static navigationOptions = {
-    title: "SignIn"
+    title: ""
   };
 
   state = {
@@ -101,7 +101,7 @@ class SignIn extends Component {
         <View style={SignInStyles.view_form}>
           <View style={SignInStyles.logo}>
             <ResponsiveImage
-              source={require("../../../assets/img/yay-transparente.png")}
+              source={require("../../../assets/img/yay-logo-rounded.png")}
               initWidth="200"
               initHeight="200"
             />

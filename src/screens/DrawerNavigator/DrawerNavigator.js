@@ -52,7 +52,7 @@ class DrawerNavigator extends Component {
             <Image
               square
               style={{ width: 80, height: 80 }}
-              source={require("../../../assets/img/yay-transparente.png")}
+              source={require("../../../assets/img/yay-logo-rounded.png")}
             />
             <Text style={DrawerNavigatorStyles.background_text}>
               {/* {this.state.user ? this.state.user.attributes.email : null} */}

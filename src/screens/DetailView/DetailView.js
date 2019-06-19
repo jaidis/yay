@@ -1,17 +1,14 @@
 import React, { Component } from "react";
 import { View, Image } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
-import { favoriteTrue, favoriteFalse } from "../../store/actions/index";
+import { favoriteTrue, favoriteFalse, addUser } from "../../store/actions/index";
 
 import {
-  Container,
-  Header,
   Content,
   Card,
   CardItem,
   Text,
-  Right,
-  Body,
   H2,
   H3,
   Button,
@@ -19,10 +16,11 @@ import {
 } from "native-base";
 
 import { Icon as IconElements } from "react-native-elements";
-
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
 
 import DetailViewStyles from "./DetailViewStyles";
 
@@ -107,6 +105,32 @@ class DetailView extends Component {
         horario: t_horario
       });
 
+      NetInfo.isConnected
+        .fetch()
+        .then(async isConnected => {
+          if (isConnected) {
+            try {
+              let favorites = {
+                token: this.props.appJson.userdata.token,
+                id_restaurant: this.props.restaurantJson.data.id
+              };
+
+              let response = await YAY_Api.fetchInternetDataAsync(
+                AppConsts.URL_FAVORITES,
+                await YAY_Api.getRequestPostAsync(favorites)
+              );
+
+              if (response.status === "success") {
+                this.props.c_favoriteTrue();
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
       console.log("Datos comprobados");
     }
   }
@@ -115,12 +139,6 @@ class DetailView extends Component {
    * COMPONENT WILL MOUNT
    */
   async componentDidMount() {
-    // console.log(await this.props.navigation.getParam("data", false));
-    // await this.setState({
-    //   isFocused: true,
-    //   restaurant: this.props.navigation.getParam("data", false)
-    // });
-
     await this.setState({
       isFocused: true,
       restaurant: this.props.restaurantJson
@@ -131,10 +149,6 @@ class DetailView extends Component {
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
         console.log("inicio", this.props.navigation.getParam("data", false));
-        // await this.setState({
-        //   isFocused: true,
-        //   restaurant: this.props.navigation.getParam("data", false)
-        // });
 
         await this.setState({
           isFocused: true,
@@ -192,11 +206,40 @@ class DetailView extends Component {
           name={this.props.favorite ? "star" : "star-o"}
           type="font-awesome"
           color="#6E78AA"
-          onPress={() =>
-            this.props.favorite
-              ? this.props.c_favoriteFalse()
-              : this.props.c_favoriteTrue()
-          }
+          onPress={() => {
+            NetInfo.isConnected
+              .fetch()
+              .then(async isConnected => {
+                if (isConnected) {
+                  try {
+                    let favorites = {
+                      token: this.props.appJson.userdata.token,
+                      id_restaurant: this.props.restaurantJson.data.id
+                    };
+
+                    let response = await YAY_Api.fetchInternetDataAsync(
+                      this.props.favorite
+                        ? AppConsts.URL_FAVORITES_DELETE
+                        : AppConsts.URL_FAVORITES_REGISTER,
+                      await YAY_Api.getRequestPostAsync(favorites)
+                    );
+
+                    if (response.status === "success") {
+                      this.props.favorite
+                        ? this.props.c_favoriteFalse()
+                        : this.props.c_favoriteTrue();
+
+                      this.props.c_addUser(response);
+                    }
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }}
           containerStyle={{
             position: "absolute",
             alignItems: "center",
@@ -485,12 +528,6 @@ class DetailView extends Component {
   };
 
   render() {
-    eltenedor = {
-      emai: "eltenedor@mailna.co",
-      password: "asdf123",
-      nombre: "tenedor",
-      apellido: "cuchara"
-    };
     return (
       <View style={DetailViewStyles.container}>
         {NaviteBaseMenu.menuGoBack(
@@ -552,7 +589,6 @@ class DetailView extends Component {
             iconLeft
             rounded
             onPress={() => {
-              console.log(this.props.restaurantJson);
               this.props.navigation.navigate("Reserve");
             }}
           >
@@ -577,7 +613,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     c_favoriteTrue: () => dispatch(favoriteTrue()),
-    c_favoriteFalse: () => dispatch(favoriteFalse())
+    c_favoriteFalse: () => dispatch(favoriteFalse()),
+    c_addUser: userJSON => dispatch(addUser(userJSON))
   };
 };
 

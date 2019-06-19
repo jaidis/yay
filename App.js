@@ -45,7 +45,7 @@ import configureStore from "./src/store/configureStore";
 // Cargar libreria i18n
 import * as RNLocalize from "react-native-localize";
 import { setI18nConfig } from "./languages/i18n";
-let i18n = setI18nConfig();
+var i18n = setI18nConfig();
 
 // Init the Redux Store configuration
 let storeConfiguration = configureStore();

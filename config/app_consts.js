@@ -7,3 +7,6 @@ export const URL_CREDIT_CARD_UPDATE = SERVER + "creditcard/update";
 export const URL_RESTAURANT = SERVER + "restaurants";
 export const URL_BOOKINGS_SEARCH = SERVER + "bookings";
 export const URL_BOOKINGS_REGISTER = SERVER + "bookings/register";
+export const URL_FAVORITES = SERVER + "favorites";
+export const URL_FAVORITES_REGISTER = SERVER + "favorites/register";
+export const URL_FAVORITES_DELETE = SERVER + "favorites/delete";

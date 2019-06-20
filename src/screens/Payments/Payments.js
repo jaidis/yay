@@ -34,6 +34,7 @@ class Payments extends Component {
    * @description Acciones cuando se carga el componente
    */
   async componentDidMount() {
+    this.props.c_deleteCreditCard();
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
         console.log("inicio");

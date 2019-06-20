@@ -1,21 +1,17 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
-import { loadingTrue, loadingFalse } from "../../store/actions/index";
+import { addUser } from "../../store/actions/index";
 
-import {
-  Input,
-  SearchBar,
-  Icon,
-  Button,
-  ThemeProvider
-} from "react-native-elements";
-import { H2, DatePicker, Item, Picker } from "native-base";
-import ResponsiveImage from "react-native-responsive-image";
+import { Input, Icon, Button } from "react-native-elements";
+import { H2, DatePicker } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import * as Validar from "../../functions/Validate_helper";
+import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
 
 import ProfileStyles from "./ProfileStyles";
 
@@ -197,7 +193,59 @@ class Profile extends Component {
   /**
    *
    */
-  updateDataAsync = async () => {};
+  updateDataAsync = async () => {
+    this.setState({ update_data_loading: true });
+
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            let changeUserData = {
+              token: this.props.appJson.userdata.token,
+              first_name: this.state.nombre != "" ? this.state.nombre : null,
+              last_name:
+                this.state.apellidos != "" ? this.state.apellidos : null,
+              phone_number:
+                this.state.telefono != "" ? this.state.telefono : null,
+              birth_date:
+                this.state.fechaNacimiento != ""
+                  ? this.state.fechaNacimiento
+                  : null,
+              address: this.state.direccion != "" ? this.state.direccion : null,
+              address_locale:
+                this.state.localidad != "" ? this.state.localidad : null,
+              address_province:
+                this.state.provincia != "" ? this.state.provincia : null,
+              address_postal:
+                this.state.codigo_postal != ""
+                  ? this.state.codigo_postal
+                  : null,
+              address_country: this.state.pais != "" ? this.state.pais : null
+            };
+
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_USER_UPDATE,
+              await YAY_Api.getRequestPostAsync(changeUserData)
+            );
+
+            if (response.status === "success") {
+              this.props.c_addUser(response);
+              this.setState({ update_data_loading: false });
+            } else {
+              console.log(response);
+              this.setState({ update_data_loading: false });
+            }
+          } catch (error) {
+            console.log(error);
+            this.setState({ update_data_loading: false });
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   /**
    * MÉTODO ALERT DE VERIFICACIÓN DE DATOS
@@ -239,15 +287,53 @@ class Profile extends Component {
     }
 
     if (!error) {
-      // console.log("Todo va bien");
-      // this.setState({ loading_process_bar: false });
       this.changePasswordAsync();
     } else {
       this.setState({ update_password_loading: false });
     }
   };
 
-  changePasswordAsync = async () => {};
+  changePasswordAsync = async () => {
+    this.setState({ update_password_loading: true });
+
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            let changePassword = {
+              token: this.props.appJson.userdata.token,
+              old_password: this.state.old_password,
+              new_password: this.state.password
+            };
+
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_USER_PASSWORD,
+              await YAY_Api.getRequestPostAsync(changePassword)
+            );
+
+            if (response.status === "success") {
+              this.props.c_addUser(response);
+              this.setState({
+                update_password_loading: false,
+                old_password: "",
+                password: "",
+                password_copy: ""
+              });
+            } else {
+              console.log(response);
+              this.setState({ update_password_loading: false });
+            }
+          } catch (error) {
+            console.log(error);
+            this.setState({ update_password_loading: false });
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   render() {
     return (
@@ -548,6 +634,7 @@ class Profile extends Component {
                   size={25}
                 />
               }
+              value={this.state.old_password}
               placeholder="Old Password"
               autoCapitalize="none"
               secureTextEntry={true}
@@ -556,7 +643,7 @@ class Profile extends Component {
               returnKeyType="next"
               ref={input => (this.oldPassword2Input = input)}
               onSubmitEditing={() => {
-                this.confirmPassword2Input.focus();
+                this.password2Input.focus();
               }}
               onChangeText={old_password => {
                 this.setState({ old_password: old_password });
@@ -583,6 +670,7 @@ class Profile extends Component {
                   size={25}
                 />
               }
+              value={this.state.password}
               placeholder="New Password"
               autoCapitalize="none"
               secureTextEntry={true}
@@ -617,6 +705,7 @@ class Profile extends Component {
                   size={25}
                 />
               }
+              value={this.state.password_copy}
               placeholder="Confirm Password"
               autoCapitalize="none"
               keyboardAppearance="light"
@@ -664,8 +753,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    c_loadingTrue: () => dispatch(loadingTrue()),
-    c_loadingFalse: () => dispatch(loadingFalse())
+    c_addUser: userJSON => dispatch(addUser(userJSON))
   };
 };
 

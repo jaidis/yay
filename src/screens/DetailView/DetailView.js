@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { View, Image } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
-import { favoriteTrue, favoriteFalse, addUser } from "../../store/actions/index";
+import {
+  favoriteTrue,
+  favoriteFalse,
+  addUser
+} from "../../store/actions/index";
 
 import {
   Content,
@@ -122,6 +126,8 @@ class DetailView extends Component {
 
               if (response.status === "success") {
                 this.props.c_favoriteTrue();
+              } else {
+                console.log(response);
               }
             } catch (error) {
               console.log(error);
@@ -230,6 +236,8 @@ class DetailView extends Component {
                         : this.props.c_favoriteTrue();
 
                       this.props.c_addUser(response);
+                    } else {
+                      console.log(response);
                     }
                   } catch (error) {
                     console.log(error);

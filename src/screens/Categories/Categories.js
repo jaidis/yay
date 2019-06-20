@@ -1,24 +1,24 @@
 import React, { Component } from "react";
 import {
   View,
-  Image,
   ImageBackground,
   ScrollView,
   TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
-import {
-  loadingTrue,
-  loadingFalse,
-  addCategoriesList,
-  deleteCategoriesList
-} from "../../store/actions/index";
+import { addCategoriesList } from "../../store/actions/index";
 
-import { Icon } from "react-native-elements";
-import { Card, CardItem, Text, H3 } from "native-base";
+import { Text, H3 } from "native-base";
 import { FlatGrid } from "react-native-super-grid";
+
+// FUNCTIONS OR HELPERS
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import CategoriesStyles from "./CategoriesStyles";
 
 /**
@@ -26,7 +26,7 @@ import CategoriesStyles from "./CategoriesStyles";
  */
 class Categories extends Component {
   static navigationOptions = {
-    title: "Categories"
+    title: i18n.t("categories_title")
   };
 
   state = {
@@ -50,21 +50,21 @@ class Categories extends Component {
    * @description COMPONENT DID MOUNT
    */
   async componentDidMount() {
-    console.log("Categories First Start");
+    // console.log("Categories First Start");
     this.componentDoSomething();
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("Categories Listener Start");
+        // console.log("Categories Listener Start");
         this.componentDoSomething();
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("Categories Listener Exit");
+        // console.log("Categories Listener Exit");
       })
     ];
   }
 
   /**
-   * @description
+   * @description Renderiza las categorías disponibles en la aplicación
    */
   renderFavorites = () => {
     return (
@@ -72,12 +72,12 @@ class Categories extends Component {
         <FlatGrid
           itemDimension={200}
           items={this.props.appJson.userdata.categories}
-          style={{flex: 1,  marginTop: 10, marginLeft: 5, marginRight:5}}
+          style={CategoriesStyles.categories_flat_grid_style}
           renderItem={({ item, index }) => (
             <View>
               <TouchableOpacity
                 onPress={async () => {
-                  console.log("Item ID: ", item.id);
+                  // console.log("Item ID: ", item.id);
                   await this.props.c_addCategoriesList(item.list);
                   this.props.navigation.navigate("CategoriesList");
                 }}
@@ -106,10 +106,9 @@ class Categories extends Component {
    */
   renderEmpty = () => {
     return (
-      <View style={CategoriesStyles.favorites_empty}>
-        <Text style={CategoriesStyles.favorites_empty_text}>
-          ¡Vaya, vaya, vaya! Parece que no podemos mostrarte las categorías, lo sentimos.
-          Inténtalo de nuevo y si el problema persiste haznoslo saber.
+      <View style={CategoriesStyles.categories_empty}>
+        <Text style={CategoriesStyles.categories_empty_text}>
+          {i18n.t("categories_empty")}
         </Text>
       </View>
     );
@@ -121,7 +120,7 @@ class Categories extends Component {
   render() {
     return (
       <View style={CategoriesStyles.container}>
-        {NaviteBaseMenu.menuGoHome(this, "Categories")}
+        {NaviteBaseMenu.menuGoHome(this, i18n.t("categories_title"))}
         {this.state.count_categories
           ? this.renderFavorites()
           : this.renderEmpty()}
@@ -150,7 +149,8 @@ const mapDispatchToProps = dispatch => {
   return {
     c_loadingTrue: () => dispatch(loadingTrue()),
     c_loadingFalse: () => dispatch(loadingFalse()),
-    c_addCategoriesList: categoriesList => dispatch(addCategoriesList(categoriesList))
+    c_addCategoriesList: categoriesList =>
+      dispatch(addCategoriesList(categoriesList))
   };
 };
 

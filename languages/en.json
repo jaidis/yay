@@ -1,3 +1,18 @@
 {
-  "": ""
+  "": "",
+  "----generic_messages": "Mensajes Genéricos",
+  "internet_error_word":"Internet error",
+  "internet_error_message":"No internet access, please check your connection and try again",
+  "----categories":"Pantalla de CATEGORIES",
+  "categories_title": "Categories",
+  "----categories_list":"Pantalla de CATEGORIES LIST",
+  "categories_list_title": "Categories",
+  "categories_list_empty": "Oops! It seems that we can not show you restaurants in this category, we're sorry.",
+  "----signin":"Pantalla de SIGNIN",
+  "signin_email_input":"Email",
+  "signin_email_input_error":"Please enter a valid email address",
+  "signin_password_input":"Password",
+  "signin_password_input_error":"  Please enter a valid password",
+  "signin_button_signin":"SIGNIN",
+  "signin_button_register":"REGISTER"
 }

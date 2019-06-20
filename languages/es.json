@@ -1,3 +1,18 @@
 {
-  "": ""
+  "": "",
+  "----generic_messages": "Mensajes Genéricos",
+  "internet_error_word":"Error Internet",
+  "internet_error_message":"No se ha detectado acceso a Internet, por favor, compruebe su conexión y vuelva a intentarlo",
+  "----categories":"Pantalla de CATEGORIES",
+  "categories_title": "Categories",
+  "----categories_list":"Pantalla de CATEGORIES LIST",
+  "categories_list_title": "Categories",
+  "categories_list_empty": "¡Ups! Parece que no podemos mostrarte restaurantes en esta categoria, lo sentimos.",
+  "----signin":"Pantalla de SIGNIN",
+  "signin_email_input":"Email",
+  "signin_email_input_error":"Por favor introduce una dirección de correo válida",
+  "signin_password_input":"Contraseña",
+  "signin_password_input_error":"Por favor introduce una contraseña válida",
+  "signin_button_signin":"Iniciar sesión",
+  "signin_button_register":"Registrarse"
 }

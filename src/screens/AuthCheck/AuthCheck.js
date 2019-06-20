@@ -7,6 +7,7 @@ import { addUser, deleteUser, addBookings } from "../../store/actions/index";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
+// FUNCTIONS OR HELPERS
 import ResponsiveImage from "react-native-responsive-image";
 
 /**
@@ -23,24 +24,42 @@ class AuthCheck extends Component {
         .fetch()
         .then(async isConnected => {
           if (isConnected) {
-            AuthCheckJSON = {
-              token: this.props.appJson.userdata.token
-            };
-            let response = await YAY_Api.fetchInternetDataAsync(
-              AppConsts.URL_USER_REFRESH,
-              await YAY_Api.getRequestPostAsync(AuthCheckJSON)
-            );
-            this.props.c_addUser(response);
-            this.props.navigation.navigate("Home");
+            try {
+              AuthCheckJSON = {
+                token: this.props.appJson.userdata.token
+              };
+              let response = await YAY_Api.fetchInternetDataAsync(
+                AppConsts.URL_USER_REFRESH,
+                await YAY_Api.getRequestPostAsync(AuthCheckJSON)
+              );
 
-            bookingJSON = { token: this.props.appJson.userdata.token };
-            response = await YAY_Api.fetchInternetDataAsync(
-              AppConsts.URL_BOOKINGS_SEARCH,
-              await YAY_Api.getRequestPostAsync(bookingJSON)
-            );
-            this.props.c_addBookings(response);
+              if (response.status === "success") {
+                this.props.c_addUser(response);
+                this.props.navigation.navigate("Home");
+              }
+
+              bookingJSON = { token: this.props.appJson.userdata.token };
+              response = await YAY_Api.fetchInternetDataAsync(
+                AppConsts.URL_BOOKINGS_SEARCH,
+                await YAY_Api.getRequestPostAsync(bookingJSON)
+              );
+
+              if (response.status === "success") {
+                this.props.c_addBookings(response);
+              }
+            } catch (error) {
+              console.log(error);
+
+              this.props.appJson != null
+                ? this.props.navigation.navigate("Home")
+                : this.props.navigation.navigate("SignIn");
+            }
           } else {
-            this.props.navigation.navigate("Home");
+            
+            this.props.appJson != null
+            ? this.props.navigation.navigate("Home")
+            : this.props.navigation.navigate("SignIn");
+            
           }
         })
         .catch(error => {

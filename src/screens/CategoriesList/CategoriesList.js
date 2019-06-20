@@ -1,21 +1,27 @@
 import React, { Component } from "react";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView, Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import {
-  loadingTrue,
-  loadingFalse,
   favoriteTrue,
   favoriteFalse,
   addRestaurant,
   deleteCategoriesList
 } from "../../store/actions/index";
-import restaurante from "../../../restaurante.json";
 
-import { Icon } from "react-native-elements";
 import { Card, CardItem, Text } from "native-base";
 import { FlatGrid } from "react-native-super-grid";
-import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 
+// FUNCTIONS OR HELPERS
+import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
+
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import CategoriesListStyles from "./CategoriesListStyles";
 
 /**
@@ -23,7 +29,7 @@ import CategoriesListStyles from "./CategoriesListStyles";
  */
 class CategoriesList extends Component {
   static navigationOptions = {
-    title: "CategoriesList"
+    title: i18n.t("categories_list_title")
   };
 
   state = {
@@ -47,25 +53,27 @@ class CategoriesList extends Component {
    * @description COMPONENT DID MOUNT
    */
   async componentDidMount() {
-    console.log("CategoriesList First Start");
+    // console.log("CategoriesList First Start");
     this.componentDoSomething();
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("CategoriesList Listener Start");
+        // console.log("CategoriesList Listener Start");
         this.componentDoSomething();
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("CategoriesList Listener Exit");
+        // console.log("CategoriesList Listener Exit");
       })
     ];
   }
-
-  componentWillUnmount(){
+  /**
+   * @description COMPONENT WILL UNMOUNT
+   */
+  componentWillUnmount() {
     this.props.c_deleteCategoriesList();
   }
 
   /**
-   * @description
+   * @description 
    */
   renderFavorites = () => {
     return (
@@ -79,35 +87,56 @@ class CategoriesList extends Component {
           // spacing={20}
           renderItem={({ item, index }) => (
             <View>
-              {/* <Image
-                source={{ uri: item.logo }}
-                style={{ flex: 1, height: 200, width: null }}
-              />
-              <Text style={{ fontWeight: "600", fontSize: 12, color: "#fff" }}>
-                {item.name}
-              </Text> */}
               <Card key={index}>
                 <CardItem
                   cardBody
                   button
                   onPress={async () => {
-                    // this.props.c_favoriteTrue();
-                    await this.props.c_addRestaurant(restaurante);
-                    this.props.navigation.navigate("DetailView");
+                    NetInfo.isConnected
+                      .fetch()
+                      .then(async isConnected => {
+                        if (isConnected) {
+                          try {
+                            let restaurantJSON = {
+                              id_restaurant: item.id_restaurant
+                            };
+
+                            let response = await YAY_Api.fetchInternetDataAsync(
+                              AppConsts.URL_RESTAURANT,
+                              await YAY_Api.getRequestPostAsync(restaurantJSON)
+                            );
+
+                            if (response.status === "success") {
+                              await this.props.c_addRestaurant(response);
+                              this.props.navigation.navigate("DetailView");
+                            } else {
+                              console.log(response);
+                            }
+                          } catch (error) {
+                            console.log(error);
+                          }
+                        } else {
+                          Alert.alert(
+                            i18n.t("internet_error_word"),
+                            i18n.t("internet_error_message"),
+                            [{ text: "OK" }],
+                            { cancelable: false }
+                          );
+                        }
+                      })
+                      .catch(error => {
+                        console.log(error);
+                      });
                   }}
                 >
                   <Image
                     source={{ uri: item.logo }}
-                    style={{ flex: 1, height: 200, width: null }}
+                    style={CategoriesListStyles.categories_list_image_style}
                   />
                 </CardItem>
                 <CardItem
                   cardBody
-                  style={{
-                    marginTop: 10,
-                    justifyContent: "center",
-                    paddingBottom: 10
-                  }}
+                  style={CategoriesListStyles.categories_list_card_item_style}
                 >
                   <Text>{item.name}</Text>
                 </CardItem>
@@ -124,10 +153,9 @@ class CategoriesList extends Component {
    */
   renderEmpty = () => {
     return (
-      <View style={CategoriesListStyles.favorites_empty}>
-        <Text style={CategoriesListStyles.favorites_empty_text}>
-          ¡Vaya, vaya, vaya! Parece que no podemos mostrarte restaurantes, lo
-          sentimos. Inténtalo de nuevo y si el problema persiste haznoslo saber.
+      <View style={CategoriesListStyles.categories_list_empty}>
+        <Text style={CategoriesListStyles.categories_list_empty_text}>
+        {i18n.t("categories_list_empty")}
         </Text>
       </View>
     );
@@ -139,7 +167,7 @@ class CategoriesList extends Component {
   render() {
     return (
       <View style={CategoriesListStyles.container}>
-        {NaviteBaseMenu.menuGoBack(this, "CategoriesList")}
+        {NaviteBaseMenu.menuGoBack(this, i18n.t("categories_list_title"))}
         {this.state.count_categories_list
           ? this.renderFavorites()
           : this.renderEmpty()}
@@ -155,7 +183,6 @@ class CategoriesList extends Component {
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
-    loading_bar: state.mainReducer.loading,
     favorite: state.mainReducer.favorite,
     categoriesList: state.mainReducer.categoriesListJSON
   };
@@ -167,8 +194,6 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
   return {
-    c_loadingTrue: () => dispatch(loadingTrue()),
-    c_loadingFalse: () => dispatch(loadingFalse()),
     c_favoriteTrue: () => dispatch(favoriteTrue()),
     c_favoriteFalse: () => dispatch(favoriteFalse()),
     c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON)),

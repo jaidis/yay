@@ -1,19 +1,34 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
+  //
   container: {
     flex: 1,
     backgroundColor: "#2E3248"
   },
-  favorites_empty: {
+  //
+  categories_list_empty: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
   },
-  favorites_empty_text: {
+  //
+  categories_list_empty_text: {
     fontSize: 20,
     color: "#FFF",
     textAlign: "center",
-    padding: 10
+    margin: 20
+  },
+  //
+  categories_list_image_style: {
+    flex: 1,
+    height: 200,
+    width: null
+  },
+  //
+  categories_list_card_item_style: {
+    marginTop: 10,
+    justifyContent: "center",
+    paddingBottom: 10
   }
 });

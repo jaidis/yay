@@ -11,15 +11,21 @@ import {
 import { Icon, Button } from "react-native-elements";
 import { CreditCardInput } from "react-native-credit-card-input";
 
+// FUNCTIONS OR HELPERS
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import CreditCardStyles from "./CreditCardStyles";
 
 class CreditCard extends Component {
   static navigationOptions = {
-    title: "CreditCard"
+    title: i18n.t("credit_card_title")
   };
 
   state = {
@@ -37,7 +43,7 @@ class CreditCard extends Component {
   async componentDidMount() {
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("inicio CreditCard");
+        // console.log("inicio CreditCard");
         // Do Something
         if (this.props.creditCard != null) {
           // console.log("algo tiene");
@@ -57,7 +63,7 @@ class CreditCard extends Component {
         }
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("me voy CreditCard");
+        // console.log("me voy CreditCard");
         this.props.c_deleteCreditCard();
       })
     ];
@@ -69,10 +75,14 @@ class CreditCard extends Component {
    */
   componentWillUnmount() {
     this.subs.forEach(sub => sub.remove());
-    console.log("Desmontado CreditCard");
+    // console.log("Desmontado CreditCard");
     //Do Something
   }
 
+  /**
+   * @description
+   * @param {*} creditCard
+   */
   creditCard = creditCard => {
     console.log(creditCard);
     if (creditCard.valid) {
@@ -83,11 +93,18 @@ class CreditCard extends Component {
     }
   };
 
+  /**
+   * @description
+   * @param {*} creditCard
+   */
   encryptedCard = creditCard => {
     let temp = creditCard.split(" ");
     return temp[0] + " xxxx xxxx " + temp[3];
   };
 
+  /**
+   * @description
+   */
   addCreditCard = async () => {
     this.setState({ button_add_loading: true });
     this.state.valid
@@ -129,6 +146,9 @@ class CreditCard extends Component {
       : this.setState({ button_add_loading: false });
   };
 
+  /**
+   * @description
+   */
   updateCreditCard = async () => {
     this.setState({ button_update_loading: true });
     console.log(this.state.id_credit_card);
@@ -172,44 +192,43 @@ class CreditCard extends Component {
       : this.setState({ button_add_loading: false });
   };
 
+  /**
+   * @description
+   */
   render() {
     return (
       <View style={CreditCardStyles.container}>
-        {NaviteBaseMenu.menuGoBack(this, "CreditCard")}
+        {NaviteBaseMenu.menuGoBack(this, i18n.t("credit_card_title"))}
         <ScrollView>
-          <View style={{ flex: 1, marginTop: 50 }}>
+          <View style={CreditCardStyles.credit_card_view_container}>
             <CreditCardInput
               onChange={this.creditCard}
-              labelStyle={{ color: "#FFF" }}
-              inputStyle={{ color: "white" }}
-              inputContainerStyle={{
-                borderRadius: 15,
-                borderWidth: 1,
-                borderColor: "rgba(110, 120, 170, 1)",
-                paddingTop: 5,
-                paddingLeft: 10,
-                marginLeft: 10,
-                marginRight: 5
-              }}
+              labelStyle={CreditCardStyles.credit_card_input_label_style}
+              inputStyle={CreditCardStyles.credit_card_input_input_style}
+              inputContainerStyle={
+                CreditCardStyles.credit_card_input_container_style
+              }
               labels={{
-                number: "NÚMERO DE TARJETA",
-                expiry: "EXPIRA",
-                cvc: "CCV",
-                name: "PROPIETARIO/A"
+                number: i18n.t("credit_card_input_number").toUpperCase(),
+                expiry: i18n.t("credit_card_input_expiry").toUpperCase(),
+                cvc: i18n.t("credit_card_input_cvc").toUpperCase(),
+                name: i18n.t("credit_card_input_card_holder").toUpperCase()
               }}
               allowScroll={true}
               requiresName={true}
               ref={input => (this.CCInput = input)}
             />
           </View>
-          <View style={{ alignItems: "center" }}>
+          <View style={CreditCardStyles.credit_card_view_button}>
             {this.state.update ? (
               <Button
                 loading={this.state.button_update_loading}
                 disabled={false}
-                title="Update credit card"
-                containerStyle={CreditCardStyles.button_profile_container_style}
-                buttonStyle={CreditCardStyles.button_profile_style}
+                title={i18n.t("credit_card_button_update")}
+                containerStyle={
+                  CreditCardStyles.button_credit_card_container_style
+                }
+                buttonStyle={CreditCardStyles.button_credit_card_style}
                 titleStyle={CreditCardStyles.button_title_style}
                 onPress={this.updateCreditCard}
                 icon={
@@ -224,9 +243,11 @@ class CreditCard extends Component {
               <Button
                 loading={this.state.button_add_loading}
                 disabled={false}
-                title="Add credit card"
-                containerStyle={CreditCardStyles.button_profile_container_style}
-                buttonStyle={CreditCardStyles.button_profile_style}
+                title={i18n.t("credit_card_button_add")}
+                containerStyle={
+                  CreditCardStyles.button_credit_card_container_style
+                }
+                buttonStyle={CreditCardStyles.button_credit_card_style}
                 titleStyle={CreditCardStyles.button_title_style}
                 onPress={this.addCreditCard}
                 icon={
@@ -245,6 +266,10 @@ class CreditCard extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -253,6 +278,10 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
     c_addCreditCard: creditCard => dispatch(addCreditCard(creditCard)),

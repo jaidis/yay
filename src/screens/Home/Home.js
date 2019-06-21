@@ -1,52 +1,42 @@
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  ImageBackground
-} from "react-native";
+import { View, ScrollView, Image, ImageBackground, Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import { connect } from "react-redux";
+import { addRestaurant } from "../../store/actions/index";
+
 import { SearchBar, Icon } from "react-native-elements";
 import {
-  Container,
-  Header,
   Content,
   Card,
   CardItem,
-  Thumbnail,
   Text,
   Button,
   Left,
-  Body,
   Right,
   H2,
   H3
 } from "native-base";
-import ResponsiveImage from "react-native-responsive-image";
-// import Icon from "react-native-vector-icons";
+
 import { Col, Row, Grid } from "react-native-easy-grid";
-
-import {
-  addText,
-  loadingTrue,
-  loadingFalse,
-  addRestaurant
-} from "../../store/actions/index";
-import { connect } from "react-redux";
-
-import * as AppConsts from "../../../config/app_consts";
-import * as YAY_Api from "../../functions/YAY_Api_helper";
-import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import Swiper from "react-native-swiper";
 
-// import restaurante from "../../../restaurante";
+// FUNCTIONS OR HELPERS
+import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import HomeStyles from "./HomeStyles";
 
 class Home extends Component {
-  /**
-   *
-   */
+  static navigationOptions = {
+    title: i18n.t("credit_card_title")
+  };
+
   state = {
     appJson: "",
     search: "",
@@ -55,21 +45,15 @@ class Home extends Component {
   };
 
   /**
-   *
+   * @description
    */
   componentDidMount() {
-    // this.props.navigation.navigate("DetailView", {
-    //   data: restaurante
-    // });
-    // this.props.navigation.navigate("Favorites");
-    // this.props.navigation.navigate("Profile");
-
     if (this.props.appJson.userdata) {
       this.setState({ load_content: true });
     }
   }
   /**
-   *
+   * @description
    * @param {*} buscar
    */
   updateSearch = buscar => {
@@ -78,20 +62,62 @@ class Home extends Component {
   };
 
   /**
-   *
+   * @description
+   */
+  loadDetailView = async item => {
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            let restaurantJSON = {
+              id_restaurant: item.id
+            };
+
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_RESTAURANT,
+              await YAY_Api.getRequestPostAsync(restaurantJSON)
+            );
+
+            if (response.status === "success") {
+              await this.props.c_addRestaurant(response);
+              this.props.navigation.navigate("DetailView");
+            } else {
+              console.log(response);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  /**
+   * @description
    */
   loadContent = () => {
     return (
       <View>
         <View>
-          <H2 style={HomeStyles.mainTitle}>LUGARES DESTACADOS</H2>
+          <H2 style={HomeStyles.mainTitle}>
+            {i18n.t("home_view_featured_places").toUpperCase()}
+          </H2>
         </View>
 
         <View style={HomeStyles.swiper_view}>
           <Swiper
             removeClippedSubviews={true}
             loop={true}
-            // onIndexChanged={index => console.log(index)}
             prevButton={
               <Icon
                 name="chevron-left"
@@ -126,17 +152,8 @@ class Home extends Component {
                     >
                       <H3
                         style={HomeStyles.swiper_text}
-                        onPress={async () => {
-                          console.log("Promoted ID: ", promoted.id);
-                          restaurantJSON = { id_restaurant: promoted.id };
-
-                          let response = await YAY_Api.fetchInternetDataAsync(
-                            AppConsts.URL_RESTAURANT,
-                            await YAY_Api.getRequestPostAsync(restaurantJSON)
-                          );
-
-                          await this.props.c_addRestaurant(response);
-                          this.props.navigation.navigate("DetailView");
+                        onPress={() => {
+                          this.loadDetailView(promoted);
                         }}
                       >
                         {promoted.name}
@@ -149,7 +166,9 @@ class Home extends Component {
           </Swiper>
         </View>
 
-        <H2 style={HomeStyles.title}>SITIOS CERCA DE TI</H2>
+        <H2 style={HomeStyles.title}>
+          {i18n.t("home_view_near_places").toUpperCase()}
+        </H2>
         <View>
           <Content>
             {this.props.appJson.userdata.nearby_content.map((nearby, index) => {
@@ -161,16 +180,8 @@ class Home extends Component {
                       <CardItem
                         cardBody
                         button
-                        onPress={async () => {
-                          restaurantJSON = { id_restaurant: nearby.id };
-
-                          let response = await YAY_Api.fetchInternetDataAsync(
-                            AppConsts.URL_RESTAURANT,
-                            await YAY_Api.getRequestPostAsync(restaurantJSON)
-                          );
-
-                          await this.props.c_addRestaurant(response);
-                          this.props.navigation.navigate("DetailView");
+                        onPress={() => {
+                          this.loadDetailView(nearby);
                         }}
                       >
                         <Image
@@ -185,10 +196,15 @@ class Home extends Component {
                       </CardItem>
                       <CardItem cardBody>
                         <Left>
-                          <Text>Precio medio: {nearby.price}€</Text>
+                          <Text>
+                            {i18n.t("home_view_average_price")} {nearby.price}€
+                          </Text>
                         </Left>
                         <Right style={HomeStyles.nearby_right}>
-                          <Text>Puntuación: {nearby.score}</Text>
+                          <Text>
+                            {i18n.t("home_view_score")}
+                            {nearby.score}
+                          </Text>
                         </Right>
                       </CardItem>
                       <CardItem>
@@ -198,15 +214,7 @@ class Home extends Component {
                               style={HomeStyles.nearby_categories_view}
                               key={index}
                             >
-                              <Button small bordered
-                                onPress={() => {
-                                  console.log(
-                                    "Category Id: ",
-                                    category.id_category
-                                  );
-                                }}
-                              >
-                                {/* <Icon active name="thumbs-up" /> */}
+                              <Button small bordered>
                                 <Text>{category.name}</Text>
                               </Button>
                             </View>
@@ -249,6 +257,10 @@ class Home extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -256,11 +268,12 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
-    addKeyValueJSON: (key, value) => dispatch(addText(key, value)),
-    c_loadingTrue: () => dispatch(loadingTrue()),
-    c_loadingFalse: () => dispatch(loadingFalse()),
     c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON))
   };
 };

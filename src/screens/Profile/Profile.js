@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Alert } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import { addUser } from "../../store/actions/index";
@@ -8,16 +8,22 @@ import { Input, Icon, Button } from "react-native-elements";
 import { H2, DatePicker } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
+// FUNCTIONS OR HELPERS
 import * as Validar from "../../functions/Validate_helper";
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import ProfileStyles from "./ProfileStyles";
 
 class Profile extends Component {
   static navigationOptions = {
-    title: "Profile"
+    title: i18n.t("profile_view_title")
   };
 
   state = {
@@ -64,7 +70,7 @@ class Profile extends Component {
         codigo_postal: user.address_postal,
         pais: user.address_country
       });
-      console.log("Datos comprobados");
+      // console.log("Datos comprobados");
     } catch {
       error => {
         console.log("Error when try to retrieve user from Redux: \n" + error);
@@ -80,11 +86,11 @@ class Profile extends Component {
 
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("inicio");
+        // console.log("inicio");
         await this.checkData();
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("me voy");
+        // console.log("me voy");
         this.setState({
           nombre_error: false,
           apellidos_error: false,
@@ -106,7 +112,7 @@ class Profile extends Component {
    */
   componentWillUnmount() {
     this.subs.forEach(sub => sub.remove());
-    console.log("Desmontado");
+    // console.log("Desmontado");
   }
 
   /**
@@ -156,7 +162,7 @@ class Profile extends Component {
   }
 
   /**
-   * DO SOMETHING
+   * @description
    */
   updateDataConfirmation = () => {
     // VARIABLE DE CONTROL DE VERIFICACIÓN
@@ -240,6 +246,13 @@ class Profile extends Component {
             console.log(error);
             this.setState({ update_data_loading: false });
           }
+        } else {
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
         }
       })
       .catch(error => {
@@ -248,10 +261,7 @@ class Profile extends Component {
   };
 
   /**
-   * MÉTODO ALERT DE VERIFICACIÓN DE DATOS
-   * Se validan las contraseñas que contienen
-   * al menos 7 caracteres y sean iguales
-   * Cuando todo se valida se envía a "changePassword()"
+   * @description
    */
   newPasswordDataConfirmation = () => {
     // VARIABLE DE CONTROL DE VERIFICACIÓN
@@ -328,6 +338,13 @@ class Profile extends Component {
             console.log(error);
             this.setState({ update_password_loading: false });
           }
+        } else {
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
         }
       })
       .catch(error => {
@@ -338,11 +355,13 @@ class Profile extends Component {
   render() {
     return (
       <View style={ProfileStyles.container}>
-        {NaviteBaseMenu.menuGoBack(this, "Profile")}
+        {NaviteBaseMenu.menuGoBack(this, i18n.t("profile_view_title"))}
         <KeyboardAwareScrollView style={ProfileStyles.container}>
           <View style={ProfileStyles.view_form}>
             <View>
-              <H2 style={ProfileStyles.mainTitle}>Modificar datos</H2>
+              <H2 style={ProfileStyles.mainTitle}>
+                {i18n.t("profile_form_update_data").toUpperCase()}
+              </H2>
             </View>
             {/* Nombre */}
             <Input
@@ -355,7 +374,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.nombre}
-              placeholder="First Name"
+              placeholder={i18n.t("profile_form_first_name")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -366,7 +385,9 @@ class Profile extends Component {
               }}
               onChangeText={value => this.setState({ nombre: value })}
               errorMessage={
-                this.state.nombre_error ? "Please enter a First Name" : null
+                this.state.nombre_error
+                  ? i18n.t("profile_form_first_name_error")
+                  : null
               }
               containerStyle={ProfileStyles.input_container}
               inputContainerStyle={ProfileStyles.input_container_style}
@@ -386,7 +407,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.apellidos}
-              placeholder="Last Name"
+              placeholder={i18n.t("profile_form_last_name")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -397,7 +418,9 @@ class Profile extends Component {
               }}
               onChangeText={value => this.setState({ apellidos: value })}
               errorMessage={
-                this.state.apellidos_error ? "Please enter a Last Name" : null
+                this.state.apellidos_error
+                  ? i18n.t("profile_form_last_name_error")
+                  : null
               }
               containerStyle={ProfileStyles.input_container}
               inputContainerStyle={ProfileStyles.input_container_style}
@@ -417,7 +440,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.telefono}
-              placeholder="Phone Number"
+              placeholder={i18n.t("profile_form_phone_number")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="number-pad"
@@ -428,7 +451,9 @@ class Profile extends Component {
               }}
               onChangeText={value => this.setState({ telefono: value })}
               errorMessage={
-                this.state.telefono_error ? "Please enter a Phone Number" : null
+                this.state.telefono_error
+                  ? i18n.t("profile_form_phone_number_error")
+                  : null
               }
               containerStyle={ProfileStyles.input_container}
               inputContainerStyle={ProfileStyles.input_container_style}
@@ -453,7 +478,7 @@ class Profile extends Component {
 
                   <DatePicker
                     defaultDate={this.state.fechaNacimiento}
-                    locale={"en"}
+                    locale={"es"}
                     timeZoneOffsetInMinutes={undefined}
                     modalTransparent={false}
                     animationType={"fade"}
@@ -479,7 +504,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.direccion}
-              placeholder="Address"
+              placeholder={i18n.t("profile_form_address")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -508,7 +533,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.localidad}
-              placeholder="Locale"
+              placeholder={i18n.t("profile_form_locale")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -537,7 +562,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.provincia}
-              placeholder="Province"
+              placeholder={i18n.t("profile_form_province")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -566,7 +591,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.codigo_postal}
-              placeholder="Postal code"
+              placeholder={i18n.t("profile_form_postal_code")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="number-pad"
@@ -595,7 +620,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.pais}
-              placeholder="Country"
+              placeholder={i18n.t("profile_form_country")}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -613,7 +638,7 @@ class Profile extends Component {
 
             <Button
               loading={this.state.update_data_loading}
-              title="UPDATE PROFILE"
+              title={i18n.t("profile_form_button_update_data").toUpperCase()}
               containerStyle={ProfileStyles.button_profile_container_style}
               buttonStyle={ProfileStyles.button_profile_style}
               titleStyle={ProfileStyles.button_title_style}
@@ -622,7 +647,9 @@ class Profile extends Component {
             />
 
             <View>
-              <H2 style={ProfileStyles.title}>Modificar contraseña</H2>
+              <H2 style={ProfileStyles.title}>
+                {i18n.t("profile_form_update_password").toUpperCase()}
+              </H2>
             </View>
 
             <Input
@@ -635,7 +662,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.old_password}
-              placeholder="Old Password"
+              placeholder={i18n.t("profile_form_old_password")}
               autoCapitalize="none"
               secureTextEntry={true}
               autoCorrect={false}
@@ -650,7 +677,7 @@ class Profile extends Component {
               }}
               errorMessage={
                 this.state.old_password_error
-                  ? "Please enter a valid password"
+                  ? i18n.t("profile_form_old_password_error")
                   : null
               }
               containerStyle={ProfileStyles.input_container}
@@ -671,7 +698,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.password}
-              placeholder="New Password"
+              placeholder={i18n.t("profile_form_password")}
               autoCapitalize="none"
               secureTextEntry={true}
               autoCorrect={false}
@@ -686,7 +713,7 @@ class Profile extends Component {
               }}
               errorMessage={
                 this.state.password_error
-                  ? "Please enter a valid password"
+                  ? i18n.t("profile_form_password_error")
                   : null
               }
               containerStyle={ProfileStyles.input_container}
@@ -706,7 +733,7 @@ class Profile extends Component {
                 />
               }
               value={this.state.password_copy}
-              placeholder="Confirm Password"
+              placeholder={i18n.t("profile_form_password_copy")}
               autoCapitalize="none"
               keyboardAppearance="light"
               secureTextEntry={true}
@@ -718,7 +745,7 @@ class Profile extends Component {
               onChangeText={value => this.setState({ password_copy: value })}
               errorMessage={
                 this.state.password_copy_error
-                  ? "Your passwords doesn't match"
+                  ? i18n.t("profile_form_password_copy_error")
                   : null
               }
               containerStyle={ProfileStyles.input_container}
@@ -730,7 +757,9 @@ class Profile extends Component {
             />
             <Button
               loading={this.state.update_password_loading}
-              title="UPDATE PASSWORD"
+              title={i18n
+                .t("profile_form_button_update_password")
+                .toUpperCase()}
               containerStyle={ProfileStyles.button_profile_container_style}
               buttonStyle={ProfileStyles.button_profile_style}
               titleStyle={ProfileStyles.button_title_style}
@@ -744,6 +773,10 @@ class Profile extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -751,6 +784,10 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
     c_addUser: userJSON => dispatch(addUser(userJSON))

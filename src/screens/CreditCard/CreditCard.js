@@ -238,7 +238,7 @@ class CreditCard extends Component {
               <Button
                 loading={this.state.button_update_loading}
                 disabled={false}
-                title={i18n.t("credit_card_button_update")}
+                title={i18n.t("credit_card_button_update").toUpperCase()}
                 containerStyle={
                   CreditCardStyles.button_credit_card_container_style
                 }
@@ -257,7 +257,7 @@ class CreditCard extends Component {
               <Button
                 loading={this.state.button_add_loading}
                 disabled={false}
-                title={i18n.t("credit_card_button_add")}
+                title={i18n.t("credit_card_button_add").toUpperCase()}
                 containerStyle={
                   CreditCardStyles.button_credit_card_container_style
                 }

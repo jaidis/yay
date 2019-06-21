@@ -1,19 +1,24 @@
-import {ADD_TEXT_JSON, DELETE_TEXT_JSON, AUTH_CHECK, AUTH_OK, AUTH_DENEGATE, LOADING_TRUE, LOADING_FALSE, FAVORITE_TRUE, FAVORITE_FALSE, ADD_USER, DELETE_USER, ADD_RESTAURANT, DELETE_RESTAURANT, ADD_CREDIT_CARD, DELETE_CREDIT_CARD, ADD_CATEGORIES_LIST, DELETE_CATEGORIES_LIST, ADD_BOOKINGS, DELETE_BOOKINGS, ADD_RESERVA, DELETE_RESERVA} from './actionTypes';
-
-export const addText = (new_key, add_Text) => {
-  return {
-    type: ADD_TEXT_JSON,
-    keyToAdd: new_key,
-    textToAdd: add_Text
-  };
-};
-
-export const deleteText = delete_key => {
-  return {
-    type: DELETE_TEXT_JSON,
-    keyToDelete: delete_key
-  };
-};
+import {
+  AUTH_CHECK,
+  AUTH_OK,
+  AUTH_DENEGATE,
+  LOADING_TRUE,
+  LOADING_FALSE,
+  FAVORITE_TRUE,
+  FAVORITE_FALSE,
+  ADD_USER,
+  DELETE_USER,
+  ADD_RESTAURANT,
+  DELETE_RESTAURANT,
+  ADD_CREDIT_CARD,
+  DELETE_CREDIT_CARD,
+  ADD_CATEGORIES_LIST,
+  DELETE_CATEGORIES_LIST,
+  ADD_BOOKINGS,
+  DELETE_BOOKINGS,
+  ADD_RESERVA,
+  DELETE_RESERVA
+} from "./actionTypes";
 
 export const authCheck = () => {
   return {
@@ -96,12 +101,12 @@ export const deleteCreditCard = () => {
   };
 };
 
-export const addCategoriesList = categoriesList =>{
+export const addCategoriesList = categoriesList => {
   return {
     type: ADD_CATEGORIES_LIST,
     categoriesListJSON: categoriesList
-  }
-}
+  };
+};
 
 export const deleteCategoriesList = () => {
   return {
@@ -109,12 +114,12 @@ export const deleteCategoriesList = () => {
   };
 };
 
-export const addBookings = bookings =>{
+export const addBookings = bookings => {
   return {
     type: ADD_BOOKINGS,
     bookingsJSON: bookings
-  }
-}
+  };
+};
 
 export const deleteBookings = () => {
   return {
@@ -122,12 +127,12 @@ export const deleteBookings = () => {
   };
 };
 
-export const addReserva = reserva =>{
+export const addReserva = reserva => {
   return {
     type: ADD_RESERVA,
     reservaJSON: reserva
-  }
-}
+  };
+};
 
 export const deleteReserva = () => {
   return {

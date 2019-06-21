@@ -1,14 +1,26 @@
 import React, { Component } from "react";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView, Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
-import { loadingTrue, loadingFalse, favoriteTrue, favoriteFalse, addRestaurant } from "../../store/actions/index";
-import restaurante from "../../../restaurante.json";
+import {
+  favoriteTrue,
+  favoriteFalse,
+  addRestaurant
+} from "../../store/actions/index";
 
-import { Icon } from "react-native-elements";
 import { Card, CardItem, Text } from "native-base";
 import { FlatGrid } from "react-native-super-grid";
-import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 
+// FUNCTIONS OR HELPERS
+import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+import * as AppConsts from "../../../config/app_consts";
+import * as YAY_Api from "../../functions/YAY_Api_helper";
+
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import FavoritesStyles from "./FavoritesStyles";
 
 /**
@@ -16,7 +28,7 @@ import FavoritesStyles from "./FavoritesStyles";
  */
 class Favorites extends Component {
   static navigationOptions = {
-    title: "Favorites"
+    title: i18n.t("favorites_view_title")
   };
 
   state = {
@@ -40,18 +52,61 @@ class Favorites extends Component {
    * @description COMPONENT DID MOUNT
    */
   async componentDidMount() {
-    console.log("Favorites First Start");
+    // console.log("Favorites First Start");
     this.componentDoSomething();
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("Favorites Listener Start");
+        // console.log("Favorites Listener Start");
         this.componentDoSomething();
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("Favorites Listener Exit");
+        // console.log("Favorites Listener Exit");
       })
     ];
   }
+
+  /**
+   * @description
+   */
+  loadDetailView = async item => {
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            this.props.c_favoriteTrue();
+
+            let restaurantJSON = {
+              id_restaurant: item.id_restaurant
+            };
+
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_RESTAURANT,
+              await YAY_Api.getRequestPostAsync(restaurantJSON)
+            );
+
+            if (response.status === "success") {
+              await this.props.c_addRestaurant(response);
+              this.props.navigation.navigate("DetailView");
+            } else {
+              console.log(response);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   /**
    * @description
@@ -62,41 +117,28 @@ class Favorites extends Component {
         <FlatGrid
           itemDimension={150}
           items={this.props.appJson.userdata.favorites}
-          style={{ marginTop: 10, flex: 1 }}
+          style={FavoritesStyles.favorites_flat_grid_style}
           // staticDimension={300}
           // fixed
           // spacing={20}
           renderItem={({ item, index }) => (
             <View>
-              {/* <Image
-                source={{ uri: item.logo }}
-                style={{ flex: 1, height: 200, width: null }}
-              />
-              <Text style={{ fontWeight: "600", fontSize: 12, color: "#fff" }}>
-                {item.name}
-              </Text> */}
               <Card key={index}>
                 <CardItem
                   cardBody
                   button
-                  onPress={async () => {
-                    this.props.c_favoriteTrue();
-                    await this.props.c_addRestaurant(restaurante);
-                    this.props.navigation.navigate("DetailView");
+                  onPress={() => {
+                    this.loadDetailView(item);
                   }}
                 >
                   <Image
                     source={{ uri: item.logo }}
-                    style={{ flex: 1, height: 200, width: null }}
+                    style={FavoritesStyles.favorites_card_item_image_style}
                   />
                 </CardItem>
                 <CardItem
                   cardBody
-                  style={{
-                    marginTop: 10,
-                    justifyContent: "center",
-                    paddingBottom: 10
-                  }}
+                  style={FavoritesStyles.favorites_card_item_style}
                 >
                   <Text>{item.name}</Text>
                 </CardItem>
@@ -115,9 +157,7 @@ class Favorites extends Component {
     return (
       <View style={FavoritesStyles.favorites_empty}>
         <Text style={FavoritesStyles.favorites_empty_text}>
-          ¡Vaya, vaya, vaya! Parece que no tienes favoritos, ¿Porqué no miras
-          algún restaurante en la aplicación? Quizás te acabe gustando lo que
-          ves y puedas guardarlo como favorito
+          {i18n.t("favorites_empty")}
         </Text>
       </View>
     );
@@ -129,7 +169,7 @@ class Favorites extends Component {
   render() {
     return (
       <View style={FavoritesStyles.container}>
-        {NaviteBaseMenu.menuGoHome(this, "Favorites")}
+        {NaviteBaseMenu.menuGoHome(this, i18n.t("favorites_view_title"))}
         {this.state.count_favorites
           ? this.renderFavorites()
           : this.renderEmpty()}
@@ -156,8 +196,6 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
   return {
-    c_loadingTrue:() => dispatch(loadingTrue()),
-    c_loadingFalse:() => dispatch(loadingFalse()),
     c_favoriteTrue: () => dispatch(favoriteTrue()),
     c_favoriteFalse: () => dispatch(favoriteFalse()),
     c_addRestaurant: restaurantJSON => dispatch(addRestaurant(restaurantJSON))

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import {
@@ -138,6 +138,13 @@ class CreditCard extends Component {
                 console.log(error);
                 this.setState({ button_add_loading: false });
               }
+            } else {
+              Alert.alert(
+                i18n.t("internet_error_word"),
+                i18n.t("internet_error_message"),
+                [{ text: "OK" }],
+                { cancelable: false }
+              );
             }
           })
           .catch(error => {
@@ -184,6 +191,13 @@ class CreditCard extends Component {
                 console.log(error);
                 this.setState({ button_update_loading: false });
               }
+            } else {
+              Alert.alert(
+                i18n.t("internet_error_word"),
+                i18n.t("internet_error_message"),
+                [{ text: "OK" }],
+                { cancelable: false }
+              );
             }
           })
           .catch(error => {

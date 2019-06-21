@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
+import { View, Image, Alert } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import {
@@ -22,10 +22,16 @@ import {
 import { Icon as IconElements } from "react-native-elements";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
+// FUNCTIONS OR HELPERS
 import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import DetailViewStyles from "./DetailViewStyles";
 
 class DetailView extends Component {
@@ -52,7 +58,7 @@ class DetailView extends Component {
         t_transporte_cercano,
         t_horario;
 
-      this.state.restaurant.data.logo ? (imagen = true) : (imagen = false);
+      this.state.restaurant.data.logo ? (t_imagen = true) : (t_imagen = false);
       this.state.restaurant.data.entrees.length > 0
         ? (t_entrantes = true)
         : (t_entrantes = false);
@@ -96,7 +102,7 @@ class DetailView extends Component {
         : (t_horario = false);
 
       this.setState({
-        imagen: imagen,
+        imagen: t_imagen,
         entrantes: t_entrantes,
         ensaladas: t_ensaladas,
         sopas: t_sopas,
@@ -137,7 +143,7 @@ class DetailView extends Component {
         .catch(error => {
           console.log(error);
         });
-      console.log("Datos comprobados");
+      // console.log("Datos comprobados");
     }
   }
 
@@ -154,7 +160,7 @@ class DetailView extends Component {
 
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("inicio", this.props.navigation.getParam("data", false));
+        // console.log("inicio", this.props.navigation.getParam("data", false));
 
         await this.setState({
           isFocused: true,
@@ -182,7 +188,7 @@ class DetailView extends Component {
           capacidad: false
         });
         this.props.c_favoriteFalse();
-        console.log("me voy", this.props.navigation.getParam("data", false));
+        // console.log("me voy", this.props.navigation.getParam("data", false));
       })
     ];
   }
@@ -194,7 +200,7 @@ class DetailView extends Component {
   componentWillUnmount() {
     this.subs.forEach(sub => sub.remove());
     this.props.navigation.setParams({ data: false });
-    console.log("Desmontado");
+    // console.log("Desmontado");
   }
 
   renderImagen = () => {
@@ -204,7 +210,7 @@ class DetailView extends Component {
           source={{
             uri: this.state.restaurant ? this.state.restaurant.data.logo : ""
           }}
-          style={{ flex: 1, height: 200, width: null }}
+          style={DetailViewStyles.detail_view_card_item_image_style}
         />
 
         <IconElements
@@ -237,7 +243,12 @@ class DetailView extends Component {
 
                       this.props.c_addUser(response);
                     } else {
-                      console.log(response);
+                      Alert.alert(
+                        i18n.t("internet_error_word"),
+                        i18n.t("internet_error_message"),
+                        [{ text: "OK" }],
+                        { cancelable: false }
+                      );
                     }
                   } catch (error) {
                     console.log(error);
@@ -248,13 +259,7 @@ class DetailView extends Component {
                 console.log(error);
               });
           }}
-          containerStyle={{
-            position: "absolute",
-            alignItems: "center",
-            justifyContent: "center",
-            right: 5,
-            bottom: -25
-          }}
+          containerStyle={DetailViewStyles.detail_view_card_item_icon_style}
         />
       </CardItem>
     );
@@ -263,22 +268,26 @@ class DetailView extends Component {
   renderEntrantes = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Entrantes</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_entrees")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.entrees.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -292,22 +301,26 @@ class DetailView extends Component {
   renderEnsaladas = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Ensaladas</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_salads")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.salads.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -321,22 +334,26 @@ class DetailView extends Component {
   renderSopas = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Sopas</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_soups")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.soups.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -350,22 +367,26 @@ class DetailView extends Component {
   renderCarnes = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Carnes</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_meats")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.meats.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -379,22 +400,26 @@ class DetailView extends Component {
   renderPescados = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Pescados</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_fishes")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.fishes.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -408,22 +433,26 @@ class DetailView extends Component {
   renderEspeciales = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Especiales</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_specialties")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.specialties.map((value, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Grid>
                   <Col size={80}>
                     <Text>{value.name}</Text>
                   </Col>
                   <Col size={20}>
-                    <Text style={{ textAlign: "right" }}>{value.price} €</Text>
+                    <Text
+                      style={DetailViewStyles.detail_view_card_item_col_right}
+                    >
+                      {value.price} €
+                    </Text>
                   </Col>
                 </Grid>
               </Row>
@@ -437,14 +466,11 @@ class DetailView extends Component {
   renderDescripcion = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>En pocas palabras</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_description")}</H3>
         </CardItem>
         <Grid>
-          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+          <Row style={DetailViewStyles.detail_view_card_item_row_style}>
             <Text>{this.state.restaurant.data.description}</Text>
           </Row>
         </Grid>
@@ -455,19 +481,16 @@ class DetailView extends Component {
   renderMapa = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Geolocalización</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_geolocation")}</H3>
         </CardItem>
 
         <Grid>
-          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
-            <Text>
-              X: {this.state.restaurant.data.coordenateX}
-              Y: {this.state.restaurant.data.coordenateY}
-            </Text>
+          <Row style={DetailViewStyles.detail_view_card_item_row_style}>
+            <Text>X: {this.state.restaurant.data.coordenateX}</Text>
+          </Row>
+          <Row style={DetailViewStyles.detail_view_card_item_row_style}>
+            <Text>Y: {this.state.restaurant.data.coordenateY}</Text>
           </Row>
         </Grid>
       </View>
@@ -477,14 +500,11 @@ class DetailView extends Component {
   renderTransporte = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Transporte Cercano</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_transport_nearby")}</H3>
         </CardItem>
         <Grid>
-          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+          <Row style={DetailViewStyles.detail_view_card_item_row_style}>
             <Text> {this.state.restaurant.data.transport_nearby}</Text>
           </Row>
         </Grid>
@@ -495,16 +515,16 @@ class DetailView extends Component {
   renderHorario = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Horario</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_schedule")}</H3>
         </CardItem>
         <Grid>
           {this.state.restaurant.data.schedule.map((item, index) => {
             return (
-              <Row key={index} style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Row
+                key={index}
+                style={DetailViewStyles.detail_view_card_item_row_style}
+              >
                 <Text>
                   {item.name} {item.description}
                 </Text>
@@ -519,15 +539,12 @@ class DetailView extends Component {
   renderCapacidad = () => {
     return (
       <View>
-        <CardItem
-          cardBody
-          style={{ marginTop: 20, marginLeft: 10, paddingBottom: 10 }}
-        >
-          <H3>Aforo máximo</H3>
+        <CardItem cardBody style={DetailViewStyles.detail_view_card_item_style}>
+          <H3>{i18n.t("detail_view_maximum_capacity")}</H3>
         </CardItem>
 
         <Grid>
-          <Row style={{ paddingLeft: 20, paddingRight: 20 }}>
+          <Row style={DetailViewStyles.detail_view_card_item_row_style}>
             <Text>{this.state.restaurant.data.maximum_capacity}</Text>
           </Row>
         </Grid>
@@ -542,29 +559,38 @@ class DetailView extends Component {
           this,
           this.state.restaurant.data
             ? this.state.restaurant.data.name
-            : "DetailView"
+            : i18n.t("detail_view_title")
         )}
-        <View style={{ flex: 1, margin: 20 }}>
+        <View style={DetailViewStyles.detail_view_container}>
           {this.state.isFocused ? (
             <Content>
-              <Card style={{ paddingBottom: 20 }}>
+              <Card style={DetailViewStyles.detail_view_card_style}>
                 {this.state.imagen ? this.renderImagen() : null}
-                <CardItem cardBody style={{ marginTop: 20, marginLeft: 10 }}>
+                <CardItem
+                  cardBody
+                  style={DetailViewStyles.detail_view_card_item_name}
+                >
                   <H2>
                     {this.state.restaurant.data
                       ? this.state.restaurant.data.name
                       : null}
                   </H2>
                 </CardItem>
-                <CardItem cardBody style={{ marginLeft: 10 }}>
+                <CardItem
+                  cardBody
+                  style={DetailViewStyles.detail_view_card_item_location}
+                >
                   <Text>
                     {this.state.restaurant.data
                       ? this.state.restaurant.data.location
                       : null}
                   </Text>
                 </CardItem>
-                <CardItem cardBody style={{ marginTop: 20, marginLeft: 10 }}>
-                  <H2>Platos sugeridos</H2>
+                <CardItem
+                  cardBody
+                  style={DetailViewStyles.detail_view_card_item_h2_style}
+                >
+                  <H2>{i18n.t("detail_view_suggested_dishes")}</H2>
                 </CardItem>
                 {this.state.entrantes ? this.renderEntrantes() : null}
                 {this.state.ensaladas ? this.renderEnsaladas() : null}
@@ -572,8 +598,11 @@ class DetailView extends Component {
                 {this.state.carnes ? this.renderCarnes() : null}
                 {this.state.pescados ? this.renderPescados() : null}
                 {this.state.especiales ? this.renderEspeciales() : null}
-                <CardItem cardBody style={{ marginTop: 20, marginLeft: 10 }}>
-                  <H2>Información práctica</H2>
+                <CardItem
+                  cardBody
+                  style={DetailViewStyles.detail_view_card_item_h2_style}
+                >
+                  <H2>{i18n.t("detail_view_practical_information")}</H2>
                 </CardItem>
                 {this.state.descripcion ? this.renderDescripcion() : null}
                 {this.state.mapa ? this.renderMapa() : null}
@@ -584,15 +613,7 @@ class DetailView extends Component {
             </Content>
           ) : null}
         </View>
-        <View
-          style={{
-            position: "absolute",
-            alignItems: "center",
-            justifyContent: "center",
-            right: 10,
-            bottom: 10
-          }}
-        >
+        <View style={DetailViewStyles.detail_view_button_reserve_view_style}>
           <Button
             iconLeft
             rounded
@@ -601,7 +622,7 @@ class DetailView extends Component {
             }}
           >
             <Icon type="FontAwesome" name="cutlery" />
-            <Text>RESERVAR</Text>
+            <Text>{i18n.t("detail_view_reserve")}</Text>
           </Button>
         </View>
       </View>
@@ -609,6 +630,10 @@ class DetailView extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -618,6 +643,10 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
     c_favoriteTrue: () => dispatch(favoriteTrue()),

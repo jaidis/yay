@@ -29,3 +29,33 @@ La aplicación esta compuesta por los siguientes elementos:
 - React Native Localize 1.1.3
 - i18n-js 3.3.0
 - lodash.memoize 4.1.2
+
+---
+
+### Instrucciones
+
+Para poder utilizar este proyecto es necesario descargar este repositorio. A continuación necesitaremos instalar los paquetes del proyecto con el siguiente comando
+
+```bash
+npm install 
+```
+
+Para el proyecto de Android necesitaremos ejecutar el siguiente comando:
+
+```bash
+react-native run-android
+``` 
+
+Si deseamos generar el APK en su versión release debemos ejecutar el siguiente comando:
+
+```bash
+cd android
+./gradlew bundleRelease
+``` 
+
+Para el proyecto de iOS necesitaremos ejecutar el siguiente comando:
+
+```bash
+react-native run-ios
+``` 
+---

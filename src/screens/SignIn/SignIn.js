@@ -1,28 +1,24 @@
 import React, { Component } from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
-import {
-  loadingTrue,
-  loadingFalse,
-  addUser,
-  addBookings
-} from "../../store/actions/index";
+import { addUser, addBookings } from "../../store/actions/index";
 
-import {
-  Input,
-  SearchBar,
-  Icon,
-  Button,
-  ThemeProvider
-} from "react-native-elements";
+import ResponsiveImage from "react-native-responsive-image";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Input, Icon, Button } from "react-native-elements";
 
-import SignInStyles from "./SignInStyles";
+// FUNCTIONS OR HELPERS
 import * as Validar from "../../functions/Validate_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
 
-import ResponsiveImage from "react-native-responsive-image";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
+import SignInStyles from "./SignInStyles";
 
 /**
  * @description Componente SignIn, realiza un login basado en el email y la contraseña del usuario
@@ -35,19 +31,21 @@ class SignIn extends Component {
   state = {
     appJson: "",
     loading_process_bar: false, // Muestra el simbolo de cargando
-    email: "manmunlop@gmail.com", // El email del usuario
+    email: "", // El email del usuario
     email_error: false, // Se marca si el email no es válido
-    password: "asdf123", // La contraseña del usuario
+    password: "", // La contraseña del usuario
     password_error: false, // Se marca si la contraseña no es válida
     loading_sign_in: false
   };
 
+  /**
+   * @description
+   */
   signInDataConfirmation = () => {
     // Boolean de control
     let error = false;
 
-    // TODO: cambiar por su versión de redux
-    this.setState({ loading_process_bar: true });
+    this.setState({ loading_sign_in: true });
 
     if (!Validar.validateEmail(this.state.email)) {
       this.setState({ email_error: true });
@@ -63,36 +61,63 @@ class SignIn extends Component {
       this.setState({ password_error: false });
     }
 
-    if (!error) {
-      // console.log("Todo va bien");
-      this.setState({ loading_sign_in: true });
-      this.signIn();
-    } else {
-      console.log("Se han encontrado errores");
-      this.setState({ loading_process_bar: false });
-    }
+    !error ? this.signIn() : this.setState({ loading_sign_in: false });
   };
 
+  /**
+   * @description
+   */
   signIn = async () => {
-    signInJSON = {
-      email: this.state.email,
-      password: this.state.password
-    };
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            let signInJSON = {
+              email: this.state.email,
+              password: this.state.password
+            };
 
-    let response = await YAY_Api.fetchInternetDataAsync(
-      AppConsts.URL_LOGIN,
-      await YAY_Api.getRequestPostAsync(signInJSON)
-    );
-    this.props.c_addUser(response);
-    this.setState({ loading_sign_in: false });
-    this.props.navigation.navigate("Home");
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_LOGIN,
+              await YAY_Api.getRequestPostAsync(signInJSON)
+            );
 
-    bookingJSON = { token: this.props.appJson.userdata.token };
-    response = await YAY_Api.fetchInternetDataAsync(
-      AppConsts.URL_BOOKINGS_SEARCH,
-      await YAY_Api.getRequestPostAsync(bookingJSON)
-    );
-    this.props.c_addBookings(response);
+            if (response.status === "success") {
+              this.props.c_addUser(response);
+              this.setState({ loading_sign_in: false });
+              this.props.navigation.navigate("Home");
+
+              let bookingJSON = { token: this.props.appJson.userdata.token };
+              response = await YAY_Api.fetchInternetDataAsync(
+                AppConsts.URL_BOOKINGS_SEARCH,
+                await YAY_Api.getRequestPostAsync(bookingJSON)
+              );
+
+              response.status === "success"
+                ? this.props.c_addBookings(response)
+                : null;
+            } else {
+              console.log(response);
+              this.setState({ loading_sign_in: false });
+            }
+          } catch (error) {
+            console.log(error);
+            this.setState({ loading_sign_in: false });
+          }
+        } else {
+          this.setState({ loading_sign_in: false });
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -111,11 +136,11 @@ class SignIn extends Component {
               <Icon
                 name="email-outline"
                 type="material-community"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Email"
+            placeholder={i18n.t("signin_email_input")}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -129,13 +154,11 @@ class SignIn extends Component {
               this.setState({ email: email });
             }}
             errorMessage={
-              this.state.email_error
-                ? "Please enter a valid email address"
-                : null
+              this.state.email_error ? i18n.t("signin_email_input_error") : null
             }
             containerStyle={SignInStyles.input_container}
             inputContainerStyle={SignInStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignInStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -145,11 +168,11 @@ class SignIn extends Component {
               <Icon
                 name="lock"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Password"
+            placeholder={i18n.t("signin_password_input")}
             autoCapitalize="none"
             secureTextEntry={true}
             autoCorrect={false}
@@ -162,18 +185,20 @@ class SignIn extends Component {
               this.setState({ password: password });
             }}
             errorMessage={
-              this.state.password_error ? "Please enter a valid password" : null
+              this.state.password_error
+                ? i18n.t("signin_password_input_error")
+                : null
             }
             containerStyle={SignInStyles.input_container}
             inputContainerStyle={SignInStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignInStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
           />
           <Button
             loading={this.state.loading_sign_in}
-            title="SIGNIN"
+            title={i18n.t("signin_button_signin").toUpperCase()}
             containerStyle={SignInStyles.button_signin_container_style}
             buttonStyle={SignInStyles.button_signin_style}
             titleStyle={SignInStyles.button_title_style}
@@ -182,7 +207,7 @@ class SignIn extends Component {
           />
           <Button
             loading={false}
-            title="REGISTER"
+            title={i18n.t("signin_button_register").toUpperCase()}
             containerStyle={SignInStyles.button_container_style}
             buttonStyle={SignInStyles.button_style}
             titleStyle={SignInStyles.button_title_style}
@@ -197,6 +222,10 @@ class SignIn extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -204,10 +233,12 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
-    c_loadingTrue: () => dispatch(loadingTrue()),
-    c_loadingFalse: () => dispatch(loadingFalse()),
     c_addUser: userJSON => dispatch(addUser(userJSON)),
     c_addBookings: reservaJSON => dispatch(addBookings(reservaJSON))
   };

@@ -3,17 +3,19 @@ import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { loadingTrue, loadingFalse } from "../../store/actions/index";
 
-import { Icon, Button } from "react-native-elements";
-import { H1 } from "native-base";
+import { Button } from "react-native-elements";
 import ResponsiveImage from "react-native-responsive-image";
 
-import * as NaviteBaseMenu from "../../functions/NativeBaseMenu_helper";
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
 
+// STYLES
 import ReserveConfirmedStyles from "./ReserveConfirmedStyles";
 
 class ReserveConfirmed extends Component {
   static navigationOptions = {
-    title: "ReserveConfirmed"
+    title: i18n.t("reserve_confirmed_view_title")
   };
 
   state = {
@@ -29,11 +31,11 @@ class ReserveConfirmed extends Component {
 
     this.subs = [
       this.props.navigation.addListener("willFocus", async () => {
-        console.log("inicio");
+        // console.log("inicio");
         //Do Something
       }),
       this.props.navigation.addListener("willBlur", async () => {
-        console.log("me voy");
+        // console.log("me voy");
         //Do Something
       })
     ];
@@ -45,7 +47,7 @@ class ReserveConfirmed extends Component {
    */
   componentWillUnmount() {
     this.subs.forEach(sub => sub.remove());
-    console.log("Desmontado");
+    // console.log("Desmontado");
     //Do Something
   }
 
@@ -60,21 +62,22 @@ class ReserveConfirmed extends Component {
               initHeight="200"
             />
           </View>
-          <Text style={ReserveConfirmedStyles.view_empty_text}>¡Genial!</Text>
           <Text style={ReserveConfirmedStyles.view_empty_text}>
-            Tu petición se ha enviado correctamente, revisa el apartado de
-            reservas, en breve el restaurante confirmará la reserva
+            {i18n.t("reserve_confirmed_view_text_1")}
+          </Text>
+          <Text style={ReserveConfirmedStyles.view_empty_text}>
+            {i18n.t("reserve_confirmed_view_text_2")}
           </Text>
           <Button
             loading={false}
-            title="VOLVER AL INICIO"
+            title={i18n.t("reserve_confirmed_button").toUpperCase()}
             containerStyle={
               ReserveConfirmedStyles.button_reserve_container_style
             }
             buttonStyle={ReserveConfirmedStyles.button_reserve_style}
             titleStyle={ReserveConfirmedStyles.button_title_style}
             onPress={() => {
-              this.props.navigation.navigate("Home");
+              this.props.navigation.navigate("DetailView");
             }}
             disabled={false}
           />
@@ -84,6 +87,10 @@ class ReserveConfirmed extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -91,6 +98,10 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
     c_loadingTrue: () => dispatch(loadingTrue()),

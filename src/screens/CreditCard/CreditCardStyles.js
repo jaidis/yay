@@ -25,7 +25,7 @@ export default StyleSheet.create({
   credit_card_input_container_style: {
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "rgba(110, 120, 170, 1)",
+    borderColor: "#6E78AA",
     paddingTop: 5,
     paddingLeft: 10,
     marginLeft: 10,

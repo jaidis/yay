@@ -197,7 +197,7 @@ class Home extends Component {
                       <CardItem cardBody>
                         <Left>
                           <Text>
-                            {i18n.t("home_view_average_price")} {nearby.price}€
+                            {i18n.t("home_view_average_price")}{nearby.price}€
                           </Text>
                         </Left>
                         <Right style={HomeStyles.nearby_right}>

@@ -18,7 +18,7 @@ export function validateEmail(email) {
 }
 
 /**
- * @description Función para validar una contraseña de débil de al menos 7 caracteres 
+ * @description Función para validar una contraseña de débil de al menos 7 caracteres
  * @param {*} password
  * @returns boolean
  */
@@ -37,10 +37,24 @@ export function validatePasswordWeak(password) {
  * @returns boolean
  */
 export function validatePasswordStrong(password) {
-    var passwordformat = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
-    if (password.match(passwordformat)) {
-      return true;
-    } else {
-      return false;
-    }
+  var passwordformat = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
+  if (password.match(passwordformat)) {
+    return true;
+  } else {
+    return false;
   }
+}
+
+/**
+ * MÉTODO DE VALIDACIÓN DEL NÚMERO DE TELÉFONO (MÍNIMO 10 DÍGITOS, MÁXIMO 11 DÍGITOS) INTRODUCIDO PARA EL REGISTRO
+ * @param {*} phoneNumber
+ * @returns boolean
+ */
+export function validatePhoneNumber(phoneNumber) {
+  var phoneNumberFormat = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10,11}$)/;
+  if (phoneNumber.match(phoneNumberFormat)) {
+    return true;
+  } else {
+    return false;
+  }
+}

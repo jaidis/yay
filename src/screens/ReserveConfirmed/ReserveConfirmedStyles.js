@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -40,6 +40,6 @@ export default StyleSheet.create({
     backgroundColor: "#3F51B5"
   },
   button_title_style: {
-    fontFamily: "bold"
+    fontFamily: Platform.OS === "android" ? "bold" : null
   }
 });

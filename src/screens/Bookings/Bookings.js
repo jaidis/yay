@@ -41,15 +41,17 @@ class Bookings extends Component {
   state = {
     appJson: "",
     bookings: null,
-    reservas_disponibles: null
+    reservas_disponibles: false
   };
 
   async loadContent() {
     if (this.props.bookingsJSON != null) {
-      this.setState({
-        reservas_disponibles: true,
-        bookings: this.props.bookingsJSON
-      });
+      if (this.props.bookingsJSON.data.length > 0) {
+        this.setState({
+          reservas_disponibles: true,
+          bookings: this.props.bookingsJSON
+        });
+      }
     } else {
       this.setState({ reservas_disponibles: false });
     }
@@ -66,7 +68,10 @@ class Bookings extends Component {
             );
             if (response.status === "success") {
               this.props.c_addBookings(response);
-              this.setState({ reservas_disponibles: true, bookings: response });
+              this.setState({ bookings: response });
+              if (response.data.length > 0) {
+                this.setState({ reservas_disponibles: true });
+              }
             } else {
               console.log(response);
             }
@@ -175,7 +180,7 @@ class Bookings extends Component {
     return (
       <View style={BookingsStyles.bookings_empty}>
         <Text style={BookingsStyles.bookings_empty_text}>
-        {i18n.t("bookings_list_item_date")}
+          {i18n.t("bookings_empty")}
         </Text>
       </View>
     );

@@ -113,7 +113,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>{i18n.t("drawer_navigator_favorites")}</Text>
+              <Text>{i18n.t("drawer_navigator_categories")}</Text>
             </Body>
           </ListItem>
           <Separator />

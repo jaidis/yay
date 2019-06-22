@@ -1,32 +1,26 @@
 import React, { Component } from "react";
-import { SafeAreaView, ScrollView, Image, ImageBackground } from "react-native";
+import { Image, ImageBackground } from "react-native";
 import { connect } from "react-redux";
-import {
-  loadingTrue,
-  loadingFalse,
-  deleteUser
-} from "../../store/actions/index";
+import { deleteUser } from "../../store/actions/index";
 
-// IMPORTAR LOS COMPONENTES DE NATIVE BASE
 import {
   Container,
   Content,
   Text,
-  List,
   ListItem,
   Icon,
   Left,
   Body,
-  Right,
   Button,
-  Badge,
-  Separator,
-  View
+  Separator
 } from "native-base";
-
-// Información del dispositivo
 import DeviceInfo from "react-native-device-info";
 
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
 import DrawerNavigatorStyles from "./DrawerNavigatorStyles";
 
 class DrawerNavigator extends Component {
@@ -42,21 +36,12 @@ class DrawerNavigator extends Component {
             source={require("../../../assets/img/fondologomenu.jpg")}
             style={DrawerNavigatorStyles.background}
           >
-            {/* <Image
-              square
-              style={
-                DrawerNavigatorStyles.background_image
-              }
-              source={require("../../../assets/img/yay.jpg")}
-            /> */}
             <Image
               square
               style={{ width: 80, height: 80 }}
               source={require("../../../assets/img/yay-logo-rounded.png")}
             />
             <Text style={DrawerNavigatorStyles.background_text}>
-              {/* {this.state.user ? this.state.user.attributes.email : null} */}
-              {/* micorreo@gmail.com */}
               {this.props.appJson.userdata.user.email}
             </Text>
           </ImageBackground>
@@ -71,7 +56,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Mis datos</Text>
+              <Text>{i18n.t("drawer_navigator_profile")}</Text>
             </Body>
           </ListItem>
           <ListItem
@@ -85,7 +70,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Formas de pago</Text>
+              <Text>{i18n.t("drawer_navigator_payments")}</Text>
             </Body>
           </ListItem>
           <ListItem
@@ -99,7 +84,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Reservas</Text>
+              <Text>{i18n.t("drawer_navigator_bookings")}</Text>
             </Body>
             {/* <Right> <Icon active name="arrow-forward" /> </Right> */}
           </ListItem>
@@ -114,7 +99,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Favoritos</Text>
+              <Text>{i18n.t("drawer_navigator_favorites")}</Text>
             </Body>
           </ListItem>
           <ListItem
@@ -128,7 +113,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Categorias</Text>
+              <Text>{i18n.t("drawer_navigator_favorites")}</Text>
             </Body>
           </ListItem>
           <Separator />
@@ -139,7 +124,10 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Versión App {DeviceInfo.getVersion()}</Text>
+              <Text>
+                {i18n.t("drawer_navigator_app_version")}
+                {DeviceInfo.getVersion()}
+              </Text>
             </Body>
           </ListItem>
           <ListItem
@@ -147,9 +135,9 @@ class DrawerNavigator extends Component {
             button
             onPress={() => {
               this.props.navigation.navigate("SignIn");
-              setTimeout(()=>{
+              setTimeout(() => {
                 this.props.c_deleteUser();
-              },300);
+              }, 300);
             }}
           >
             <Left>
@@ -158,7 +146,7 @@ class DrawerNavigator extends Component {
               </Button>
             </Left>
             <Body>
-              <Text>Cerrar sesión</Text>
+              <Text>{i18n.t("drawer_navigator_close_session")}</Text>
             </Body>
           </ListItem>
         </Content>
@@ -167,6 +155,10 @@ class DrawerNavigator extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson,
@@ -174,10 +166,12 @@ const mapStateToProps = state => {
   };
 };
 
+/**
+ * @description
+ * @param {*} dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
-    c_loadingTrue: () => dispatch(loadingTrue()),
-    c_loadingFalse: () => dispatch(loadingFalse()),
     c_deleteUser: () => dispatch(deleteUser())
   };
 };

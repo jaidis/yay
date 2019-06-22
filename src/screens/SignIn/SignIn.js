@@ -97,6 +97,18 @@ class SignIn extends Component {
               response.status === "success"
                 ? this.props.c_addBookings(response)
                 : null;
+            } else if (
+              response.status === "error" &&
+              response.error === "WRONG_PASSWORD"
+            ) {
+              // console.log("Contraseña incorrecta");
+              this.setState({ loading_sign_in: false });
+              Alert.alert(
+                i18n.t("signin_incorrect_password_word"),
+                i18n.t("signin_incorrect_password_message"),
+                [{ text: "OK" }],
+                { cancelable: false }
+              );
             } else {
               console.log(response);
               this.setState({ loading_sign_in: false });

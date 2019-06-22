@@ -114,6 +114,8 @@
   "signin_password_input_error": "Por favor introduce una contraseña válida",
   "signin_button_signin": "Iniciar sesión",
   "signin_button_register": "Registrarse",
+  "signin_incorrect_password_word":"Error",
+  "signin_incorrect_password_message":"Has introducido un email o contraseña incorrecta",
   "----signup": "Pantalla de SIGNUP",
   "signup_form_first_name": "Nombre",
   "signup_form_first_name_error": "Por favor introduce un nombre",

@@ -114,6 +114,8 @@
   "signin_password_input_error": "  Please enter a valid password",
   "signin_button_signin": "SIGNIN",
   "signin_button_register": "REGISTER",
+  "signin_incorrect_password_word":"Error",
+  "signin_incorrect_password_message":"You are type a incorrect email or password",
   "----signup": "Pantalla de SIGNUP",
   "signup_form_first_name": "First Name",
   "signup_form_first_name_error": "Please enter a First Name",

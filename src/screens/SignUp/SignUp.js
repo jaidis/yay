@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import { View, Alert, Text} from "react-native";
+import { View, Alert} from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 
-import {
-  Input,
-  SearchBar,
-  Icon,
-  Button,
-  ThemeProvider
-} from "react-native-elements";
-// import { Button } from "native-base";
-
+import { Input, Icon, Button } from "react-native-elements";
 import ResponsiveImage from "react-native-responsive-image";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import SignUpStyles from "./SignUpStyles";
+// FUNCTIONS OR HELPERS
 import * as Validar from "../../functions/Validate_helper";
 import * as AppConsts from "../../../config/app_consts";
 import * as YAY_Api from "../../functions/YAY_Api_helper";
+
+// LANGUAGES LIBRARY
+import { setI18nConfig } from "../../../languages/i18n";
+var i18n = setI18nConfig();
+
+// STYLES
+import SignUpStyles from "./SignUpStyles";
 
 class SignUp extends Component {
   static navigationOptions = {
@@ -25,8 +25,6 @@ class SignUp extends Component {
   };
 
   state = {
-    appJson: "",
-    loading_process_bar: false, // Muestra el simbolo de cargando
     loading_sign_up: false,
     nombre: "",
     nombre_error: false,
@@ -45,6 +43,8 @@ class SignUp extends Component {
   signUpDataConfirmation = () => {
     let error = false;
 
+    this.setState({ loading_sign_up: true });
+
     // VALIDACIÓN DEL NOMBRE
     if (this.state.nombre == "") {
       error = true;
@@ -62,7 +62,7 @@ class SignUp extends Component {
     }
 
     // VALIDACIÓN DEL NUMERO
-    if (this.state.telefono.length != 9) {
+    if (!Validar.validatePhoneNumber(this.state.telefono)) {
       error = true;
       this.setState({ telefono_error: true });
     } else {
@@ -90,9 +90,8 @@ class SignUp extends Component {
     if (!error) {
       // Los datos son correctos, el usuario debe verificar el email
       Alert.alert(
-        "Account activation",
-        this.state.email +
-          "Make sure the email is correct. It is necessary to validate the account.",
+        i18n.t("signup_alert_word"),
+        this.state.email + i18n.t("signup_alert_message"),
         [
           { text: "Cancel" },
           {
@@ -102,56 +101,81 @@ class SignUp extends Component {
             }
           }
         ],
-        { cancelable: true }
+        { cancelable: false }
       );
     } else {
-      console.log("Se han encontrado errores");
-      this.setState({ loading_process_bar: false });
+      // console.log("Se han encontrado errores");
+      this.setState({ loading_sign_up: false });
     }
   };
 
   signUp = async () => {
-    signUpJSON = {
-      email: this.state.email,
-      password: this.state.password,
-      first_name: this.state.nombre,
-      last_name: this.state.apellidos,
-      phone_number: this.state.telefono
-    };
+    NetInfo.isConnected
+      .fetch()
+      .then(async isConnected => {
+        if (isConnected) {
+          try {
+            this.setState({ loading_sign_up: true });
 
-    this.setState({ loading_sign_up: true });
+            let signUpJSON = {
+              email: this.state.email,
+              password: this.state.password,
+              first_name: this.state.nombre,
+              last_name: this.state.apellidos,
+              phone_number: this.state.telefono
+            };
 
-    let response = await YAY_Api.fetchInternetDataAsync(
-      AppConsts.URL_REGISTER,
-      await YAY_Api.getRequestPostAsync(signUpJSON)
-    );
-    this.setState({ loading_sign_up: false });
+            let response = await YAY_Api.fetchInternetDataAsync(
+              AppConsts.URL_REGISTER,
+              await YAY_Api.getRequestPostAsync(signUpJSON)
+            );
 
-    if (response.status === "success") {
-      console.log("Registrado correctamente");
-    } else if (
-      response.status === "error" &&
-      response.error === "USER_ALREADY_REGISTERED"
-    ) {
-      console.log("Usuario ya registrado");
-    } else {
-      console.log("Error desconocido");
-    }
+            if (response.status === "success") {
+              // console.log("Registrado correctamente");
+              this.setState({ loading_sign_up: false });
+              Alert.alert(
+                i18n.t("signup_confirmed_word"),
+                i18n.t("signup_confirmed_message"),
+                [{ text: "OK" }],
+                { cancelable: false }
+              );
+            } else if (
+              response.status === "error" &&
+              response.error === "USER_ALREADY_REGISTERED"
+            ) {
+              // console.log("Usuario ya registrado");
+              this.setState({ loading_sign_up: false });
+              Alert.alert(
+                i18n.t("signup_already_registered_word"),
+                i18n.t("signup_already_registered_message"),
+                [{ text: "OK" }],
+                { cancelable: false }
+              );
+            } else {
+              console.log(response);
+              this.setState({ loading_sign_up: false });
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          Alert.alert(
+            i18n.t("internet_error_word"),
+            i18n.t("internet_error_message"),
+            [{ text: "OK" }],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
     return (
       <KeyboardAwareScrollView style={SignUpStyles.container}>
         <View style={SignUpStyles.view_form}>
-          {/* <Text
-          style={{
-            color: "white",
-            fontSize: 30,
-            marginVertical: 10,
-            fontWeight: "300"
-          }}
-        >
-        </Text> */}
           <View style={SignUpStyles.logo}>
             <ResponsiveImage
               source={require("../../../assets/img/yay-logo-rounded.png")}
@@ -164,11 +188,11 @@ class SignUp extends Component {
               <Icon
                 name="user"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="First Name"
+            placeholder={i18n.t("signup_form_first_name")}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -179,11 +203,13 @@ class SignUp extends Component {
             }}
             onChangeText={value => this.setState({ nombre: value })}
             errorMessage={
-              this.state.nombre_error ? "Please enter a First Name" : null
+              this.state.nombre_error
+                ? i18n.t("signup_form_first_name_error")
+                : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -193,11 +219,11 @@ class SignUp extends Component {
               <Icon
                 name="user-follow"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Last Name"
+            placeholder={i18n.t("signup_form_last_name")}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -208,11 +234,13 @@ class SignUp extends Component {
             }}
             onChangeText={value => this.setState({ apellidos: value })}
             errorMessage={
-              this.state.apellidos_error ? "Please enter a Last Name" : null
+              this.state.apellidos_error
+                ? i18n.t("signup_form_last_name_error")
+                : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -222,11 +250,11 @@ class SignUp extends Component {
               <Icon
                 name="screen-smartphone"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Phone Number"
+            placeholder={i18n.t("signup_form_phone_number")}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="number-pad"
@@ -237,11 +265,13 @@ class SignUp extends Component {
             }}
             onChangeText={value => this.setState({ telefono: value })}
             errorMessage={
-              this.state.telefono_error ? "Please enter a Phone Number" : null
+              this.state.telefono_error
+                ? i18n.t("signup_form_phone_number_error")
+                : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -251,11 +281,11 @@ class SignUp extends Component {
               <Icon
                 name="email-outline"
                 type="material-community"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Email"
+            placeholder={i18n.t("signup_form_email")}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -268,13 +298,11 @@ class SignUp extends Component {
               this.setState({ email: email });
             }}
             errorMessage={
-              this.state.email_error
-                ? "Please enter a valid email address"
-                : null
+              this.state.email_error ? i18n.t("signup_form_email_error") : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -284,11 +312,11 @@ class SignUp extends Component {
               <Icon
                 name="lock"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Password"
+            placeholder={i18n.t("signup_form_password")}
             autoCapitalize="none"
             secureTextEntry={true}
             autoCorrect={false}
@@ -302,11 +330,13 @@ class SignUp extends Component {
               this.setState({ password: password });
             }}
             errorMessage={
-              this.state.password_error ? "Please enter a valid password" : null
+              this.state.password_error
+                ? i18n.t("signup_form_password_error")
+                : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={false}
@@ -316,11 +346,11 @@ class SignUp extends Component {
               <Icon
                 name="lock"
                 type="simple-line-icon"
-                color="rgba(110, 120, 170, 1)"
+                color="#6E78AA"
                 size={25}
               />
             }
-            placeholder="Confirm Password"
+            placeholder={i18n.t("signup_form_password_copy")}
             autoCapitalize="none"
             keyboardAppearance="light"
             secureTextEntry={true}
@@ -332,19 +362,19 @@ class SignUp extends Component {
             onChangeText={value => this.setState({ password_copy: value })}
             errorMessage={
               this.state.password_copy_error
-                ? "Your passwords doesn't match"
+                ? i18n.t("signup_form_password_copy_error")
                 : null
             }
             containerStyle={SignUpStyles.input_container}
             inputContainerStyle={SignUpStyles.input_container_style}
-            placeholderTextColor="rgba(110, 120, 170, 1)"
+            placeholderTextColor="#6E78AA"
             inputStyle={SignUpStyles.input_style}
             keyboardAppearance="light"
             blurOnSubmit={true}
           />
           <Button
             loading={this.state.loading_sign_up}
-            title="SIGNUP"
+            title={i18n.t("signup_button_signup").toUpperCase()}
             containerStyle={SignUpStyles.button_signup_container_style}
             buttonStyle={SignUpStyles.button_signup_style}
             titleStyle={SignUpStyles.button_title_style}
@@ -353,7 +383,7 @@ class SignUp extends Component {
           />
           <Button
             loading={false}
-            title="CANCEL"
+            title={i18n.t("signup_button_cancel").toUpperCase()}
             containerStyle={SignUpStyles.button_container_style}
             buttonStyle={SignUpStyles.button_style}
             titleStyle={SignUpStyles.button_title_style}
@@ -366,6 +396,10 @@ class SignUp extends Component {
   }
 }
 
+/**
+ * @description
+ * @param {*} state
+ */
 const mapStateToProps = state => {
   return {
     appJson: state.mainReducer.appJson
